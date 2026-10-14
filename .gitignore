@@ -1,0 +1,21 @@
+# Entornos locales
+.venv/
+venv/
+.env
+
+# VS Code
+.vscode/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Salidas generadas
+outputs/
+**/outputs/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
