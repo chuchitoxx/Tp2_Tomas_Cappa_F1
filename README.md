@@ -23,6 +23,10 @@ Analizar una sesión de Fórmula 1 simulada, validar registros, excluir vueltas 
 
 Este repositorio queda preparado para versionado y entrega del trabajo final.
 
+## Verificación final
+
+Validado el 2026-10-14 con `pytest -q` y ejecución real de la aplicación: 34 pruebas correctas y 6 subtests pasados.
+
 ## Verificación rápida
 
 ```bash
