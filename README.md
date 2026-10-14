@@ -22,3 +22,13 @@ Analizar una sesión de Fórmula 1 simulada, validar registros, excluir vueltas 
 ## Estado
 
 Este repositorio queda preparado para versionado y entrega del trabajo final.
+
+## Verificación rápida
+
+```bash
+cd tp2-cappa
+pytest -q
+python src/main.py --entrada data/sesion_f1.csv --sin-graficos
+```
+
+La evidencia de ejecución queda documentada en `tp2-cappa/VALIDACION.md`.
