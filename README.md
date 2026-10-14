@@ -32,3 +32,7 @@ python src/main.py --entrada data/sesion_f1.csv --sin-graficos
 ```
 
 La evidencia de ejecución queda documentada en `tp2-cappa/VALIDACION.md`.
+
+## Checklist de entrega
+
+La preparación del trabajo final queda resumida en `tp2-cappa/ENTREGA.md`.
