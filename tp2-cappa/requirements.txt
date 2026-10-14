@@ -1,0 +1,3 @@
+# Dependencia opcional, sólo para generar los gráficos (src/graficos.py).
+# El resto de la aplicación usa únicamente la biblioteca estándar de Python 3.9+.
+matplotlib>=3.7
