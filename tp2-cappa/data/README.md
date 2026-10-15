@@ -11,7 +11,7 @@
 
 - **Tipo de datos:** datos **generados mediante una simulación**. No son tiempos reales de ninguna carrera.
 - **Procedimiento de obtención:** `python scripts/generar_datos.py` (semilla fija `2026`, por lo que el resultado es siempre el mismo).
-- **Responsable:** Tomás Cappa (autor del TP).
+- **Responsable:** Tomás Cappa.
 - **Licencia / condiciones de uso:** obra propia, de libre uso para fines académicos. No contiene datos personales: los códigos de piloto (VER, NOR, LEC, HAM, RUS, ALO) se usan sólo como etiquetas de formato.
 - **Fecha de generación:** 13/10/2026.
 

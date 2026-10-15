@@ -37,8 +37,10 @@ class FuenteCSV(FuenteDatos):
             if lector.fieldnames is None:
                 raise ValueError(f"El CSV '{ruta}' está vacío o no tiene encabezado.")
             lector.fieldnames = [nombre.strip() for nombre in lector.fieldnames]
-            return [{k: (v if v is not None else "") for k, v in fila.items()}
-                    for fila in lector]
+            return [
+                {k: (v if v is not None else "") for k, v in fila.items()}
+                for fila in lector
+            ]
 
 
 class FuenteJSON(FuenteDatos):
@@ -57,13 +59,17 @@ class FuenteJSON(FuenteDatos):
                 raise ValueError(f"El JSON '{ruta}' no es válido: {e}") from e
         if isinstance(contenido, dict) and isinstance(contenido.get("vueltas"), list):
             contenido = contenido["vueltas"]
-        if not isinstance(contenido, list) or not all(isinstance(o, dict) for o in contenido):
+        if not isinstance(contenido, list) or not all(
+            isinstance(o, dict) for o in contenido
+        ):
             raise ValueError(
                 f"El JSON '{ruta}' debe ser una lista de objetos "
                 "(o un objeto con la clave 'vueltas')."
             )
-        return [{str(k): ("" if v is None else str(v)) for k, v in obj.items()}
-                for obj in contenido]
+        return [
+            {str(k): ("" if v is None else str(v)) for k, v in obj.items()}
+            for obj in contenido
+        ]
 
 
 def fuente_para(ruta: str) -> FuenteDatos:

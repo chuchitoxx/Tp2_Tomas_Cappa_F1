@@ -12,20 +12,36 @@ import unittest
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(RAIZ, "src"))
 
-import main as app                                              # noqa: E402
+import main as app  # noqa: E402
 from fuentes import FuenteCSV, FuenteDatos, FuenteJSON, fuente_para  # noqa: E402
-from modelos import Vuelta                                      # noqa: E402
-from pipeline import (EsquemaInvalidoError, ResultadoInconsistenteError,  # noqa: E402
-                      comparar_pilotos, comparar_sectores, convertir_tiempo, limpiar_datos,
-                      normalizar_campos, segundos_a_texto, seleccionar_vueltas,
-                      validar_esquema, verificar_resultado)
+from modelos import Vuelta  # noqa: E402
+from pipeline import (
+    EsquemaInvalidoError,
+    ResultadoInconsistenteError,  # noqa: E402
+    comparar_pilotos,
+    comparar_sectores,
+    convertir_tiempo,
+    limpiar_datos,
+    normalizar_campos,
+    segundos_a_texto,
+    seleccionar_vueltas,
+    validar_esquema,
+    verificar_resultado,
+)
 
 CSV_PRUEBA = os.path.join(RAIZ, "data", "sesion_f1.csv")
 JSON_PRUEBA = os.path.join(RAIZ, "data", "sesion_f1.json")
 
 
 def fila(piloto, vuelta, tiempo, s1="", s2="", s3=""):
-    return {"piloto": piloto, "vuelta": str(vuelta), "tiempo": tiempo, "s1": s1, "s2": s2, "s3": s3}
+    return {
+        "piloto": piloto,
+        "vuelta": str(vuelta),
+        "tiempo": tiempo,
+        "s1": s1,
+        "s2": s2,
+        "s3": s3,
+    }
 
 
 def preparar(filas):
@@ -49,7 +65,9 @@ class TestConversionTiempo(unittest.TestCase):
 
 class TestLimpieza(unittest.TestCase):
     def test_caso_normal_sin_rechazos(self):
-        vueltas, rechazos = preparar([fila("VER", 1, "1:25.000"), fila("VER", 2, "1:26.000")])
+        vueltas, rechazos = preparar(
+            [fila("VER", 1, "1:25.000"), fila("VER", 2, "1:26.000")]
+        )
         self.assertEqual(len(vueltas), 2)
         self.assertEqual(rechazos, [])
 
@@ -59,14 +77,14 @@ class TestLimpieza(unittest.TestCase):
 
     def test_rechazos_con_motivo(self):
         filas = [
-            fila("H4M", 1, "1:25.000"),       # piloto inválido
-            fila("VER", 0, "1:25.000"),       # vuelta inválida
-            fila("VER", 2, ""),               # incompleta
-            fila("VER", 3, "xx"),             # formato
-            fila("VER", 4, "0:10.000"),       # fuera de rango
+            fila("H4M", 1, "1:25.000"),  # piloto inválido
+            fila("VER", 0, "1:25.000"),  # vuelta inválida
+            fila("VER", 2, ""),  # incompleta
+            fila("VER", 3, "xx"),  # formato
+            fila("VER", 4, "0:10.000"),  # fuera de rango
             fila("VER", 5, "1:25.000", "28.0", "34.0", ""),  # sectores incompletos
-            fila("VER", 6, "1:25.000"),       # válida
-            fila("VER", 6, "1:25.500"),       # duplicada
+            fila("VER", 6, "1:25.000"),  # válida
+            fila("VER", 6, "1:25.500"),  # duplicada
         ]
         vueltas, rechazos = preparar(filas)
         self.assertEqual(len(vueltas), 1)
@@ -107,7 +125,9 @@ class TestVuelta(unittest.TestCase):
 class TestSeleccionYComparacion(unittest.TestCase):
     def setUp(self):
         self.vueltas = [
-            Vuelta("VER", 1, 85.0), Vuelta("VER", 2, 86.0), Vuelta("VER", 3, 87.0),
+            Vuelta("VER", 1, 85.0),
+            Vuelta("VER", 2, 86.0),
+            Vuelta("VER", 3, 87.0),
             Vuelta("NOR", 1, 90.0),
         ]
 
@@ -143,7 +163,10 @@ class TestSeleccionYComparacion(unittest.TestCase):
             seleccionar_vueltas(self.vueltas, ["V3R"])
 
     def test_tolerancia_de_sectores(self):
-        v = [Vuelta("VER", 1, 86.0, [28.0, 34.0, 23.0]), Vuelta("VER", 2, 85.0, [28.0, 34.0, 23.0])]
+        v = [
+            Vuelta("VER", 1, 86.0, [28.0, 34.0, 23.0]),
+            Vuelta("VER", 2, 85.0, [28.0, 34.0, 23.0]),
+        ]
         sel, inc = seleccionar_vueltas(v, ["VER"], tolerancia=0.5)
         self.assertEqual([x.numero for x in sel], [2])
         self.assertEqual(inc[0]["tipo"], "sectores inconsistentes")
@@ -152,8 +175,12 @@ class TestSeleccionYComparacion(unittest.TestCase):
         self.assertEqual(inc, [])
 
     def test_vuelta_lenta_excluida(self):
-        v = [Vuelta("VER", 1, 85.0), Vuelta("VER", 2, 86.0), Vuelta("VER", 3, 85.5),
-             Vuelta("VER", 4, 120.0)]
+        v = [
+            Vuelta("VER", 1, 85.0),
+            Vuelta("VER", 2, 86.0),
+            Vuelta("VER", 3, 85.5),
+            Vuelta("VER", 4, 120.0),
+        ]
         sel, inc = seleccionar_vueltas(v, ["VER"])
         self.assertEqual([x.numero for x in sel], [1, 2, 3])
         self.assertEqual(inc[0]["tipo"], "vuelta lenta")
@@ -181,9 +208,14 @@ class TestSeleccionYComparacion(unittest.TestCase):
 
 class TestSectores(unittest.TestCase):
     def test_caso_normal_vuelta_ideal(self):
-        v = [Vuelta("VER", 1, 85.0, [28.0, 34.0, 23.0]), Vuelta("VER", 2, 85.1, [27.9, 34.2, 23.0])]
+        v = [
+            Vuelta("VER", 1, 85.0, [28.0, 34.0, 23.0]),
+            Vuelta("VER", 2, 85.1, [27.9, 34.2, 23.0]),
+        ]
         res = comparar_sectores(v, ["VER"])[0]
-        self.assertEqual((res["mejor_s1"], res["mejor_s2"], res["mejor_s3"]), (27.9, 34.0, 23.0))
+        self.assertEqual(
+            (res["mejor_s1"], res["mejor_s2"], res["mejor_s3"]), (27.9, 34.0, 23.0)
+        )
         self.assertAlmostEqual(res["vuelta_ideal_s"], 84.9)
 
     def test_piloto_sin_sectores(self):
@@ -210,7 +242,9 @@ class TestFuentes(unittest.TestCase):
 
     def test_equivalencia_csv_json(self):
         """Propiedad: CSV y JSON equivalentes se leen igual."""
-        self.assertEqual(FuenteCSV().cargar(CSV_PRUEBA), FuenteJSON().cargar(JSON_PRUEBA))
+        self.assertEqual(
+            FuenteCSV().cargar(CSV_PRUEBA), FuenteJSON().cargar(JSON_PRUEBA)
+        )
 
     def test_csv_recorta_espacios_en_encabezados(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -252,10 +286,14 @@ class TestFuentes(unittest.TestCase):
 
 class TestAplicacion(unittest.TestCase):
     def _ejecutar(self, entrada, salida, extra=()):
-        return app.main(["--entrada", entrada, "--salida", salida, "--sin-graficos", *extra])
+        return app.main(
+            ["--entrada", entrada, "--salida", salida, "--sin-graficos", *extra]
+        )
 
     def _leer(self, carpeta):
-        with open(os.path.join(carpeta, "comparacion_pilotos.csv"), encoding="utf-8") as f:
+        with open(
+            os.path.join(carpeta, "comparacion_pilotos.csv"), encoding="utf-8"
+        ) as f:
             return f.read()
 
     def test_reproducibilidad_y_equivalencia(self):

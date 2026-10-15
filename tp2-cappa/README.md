@@ -1,18 +1,28 @@
-# Validador de sesiones y comparador de vueltas (Fórmula 1)
+# Comparador de vueltas de Fórmula 1
 
 **Autor:** Tomás Cappa  
 **Materia:** Programación Orientada a Datos – Licenciatura en Ciencia de Datos – UCA Rosario, 2026  
 **Trabajo:** TP2 individual
 
-## 1. Problema, usuario y solución propuesta
+## Problema y solución
 
-**Problema.** Al revisar una sesión de automovilismo, los tiempos de vuelta llegan escritos de distintas maneras (`1:25.123` o `85.123`), con vueltas incompletas, registros repetidos y sectores que no suman el tiempo total. Compararlos a mano es lento y difícil de repetir.
+Después de una sesión de entrenamientos, un equipo necesita distinguir si un piloto fue rápido en una vuelta aislada, si mantuvo un ritmo regular y en qué partes del circuito se puede estar perdiendo tiempo. La tarea se complica cuando el registro incluye formatos distintos, datos faltantes o repetidos, vueltas de entrada o salida de boxes y sectores que no coinciden con el tiempo total.
 
-**Usuario.** Una persona que analiza el rendimiento de pilotos (estudiante, aficionado o integrante de un equipo) y necesita una comparación confiable sin limpiar los datos manualmente.
+El proyecto automatiza esa primera lectura: valida y limpia los registros, deja constancia de los rechazos y exclusiones, compara los tiempos por piloto y genera tablas y gráficos para explicar qué se observa. Su finalidad es apoyar una conversación inicial sobre el ritmo de una sesión, no decidir por sí solo la estrategia de carrera.
 
-**Solución.** Una aplicación de consola que importa una sesión (CSV o JSON), valida cada registro, separa lo que no sirve **explicando el motivo**, excluye las vueltas no representativas y compara a los pilotos elegidos.
+### Preguntas de análisis y resolución teórica
 
-**Resultado e interpretación.** Una tabla por piloto con cantidad de vueltas utilizadas, mejor vuelta, media, desvío estándar y diferencia con el mejor tiempo. Un desvío bajo indica un ritmo regular; la media más cercana a la mejor vuelta indica mejor consistencia.
+Con el archivo de ejemplo, la aplicación lee 91 registros, acepta 84 y rechaza 7 por problemas de calidad. Luego excluye 4 vueltas válidas que no son adecuadas para comparar y calcula las métricas con las 80 restantes. A partir de esos resultados, se plantean estas preguntas:
+
+1. **¿Quién consiguió la vuelta más rápida?** VER marcó la mejor vuelta de la sesión, con **1:24.675**. NOR quedó a **0.336 s**. Esto responde quién logró el mejor registro puntual, pero una sola vuelta no alcanza para decidir quién sostuvo el mejor ritmo.
+2. **¿Quién tuvo el ritmo más regular?** LEC presenta el menor desvío estándar (**0.219 s**), por lo que sus tiempos utilizados fueron los más agrupados alrededor de su media. No significa que haya sido el más rápido: su mejor vuelta fue **1:25.440**, mientras que la de VER fue más rápida. Rapidez máxima y regularidad son aspectos distintos.
+3. **¿Quién mostró el mejor ritmo promedio?** VER tuvo la media más baja (**1:25.318**), seguido de NOR (**1:25.409**). Como en los tiempos de vuelta un valor menor es más rápido, el promedio favorece a VER en esta sesión. La diferencia entre ambos es pequeña y, al tratarse de datos simulados y una sola sesión, no permite concluir que esa ventaja se repetiría en una carrera real.
+4. **¿El gráfico de sectores permite afirmar en qué sector es mejor cada piloto?** No con estos datos. Los sectores simulados se construyen como proporciones fijas del tiempo total (33 %, 40 % y 27 %). Por eso, sus diferencias repiten proporcionalmente las diferencias generales de ritmo y no representan fortalezas reales en una parte del circuito. Con datos reales, comparar las diferencias por sector sí ayudaría a localizar dónde se gana o pierde tiempo.
+5. **¿Por qué hay que revisar la evolución vuelta a vuelta además de las medias?** El gráfico permite ver cambios de ritmo y reconocer vueltas excluidas —por ejemplo, posibles vueltas de boxes— que podrían distorsionar una comparación. En este ejemplo se excluyeron cuatro vueltas con incidencias; los registros rechazados y sus motivos también quedan disponibles para revisar la limpieza.
+
+**Conclusión del ejemplo:** VER combina la vuelta más rápida con la mejor media, mientras que LEC es quien muestra mayor regularidad. La lectura depende de qué se quiera evaluar: pico de velocidad, ritmo promedio o consistencia. Los gráficos orientan la interpretación, pero sus conclusiones deben limitarse a esta sesión simulada.
+
+La tabla de comparación muestra cuántas vueltas se usaron, la mejor vuelta, la media, el desvío estándar y la diferencia respecto del mejor tiempo. Un desvío menor indica tiempos más parejos dentro de esta sesión.
 
 ### Funcionalidades
 
@@ -27,8 +37,7 @@
 
 ### Alcance de la primera versión
 
-**Incluye:** una sesión por archivo, tres sectores por vuelta, comparación estadística básica por piloto.  
-**Queda fuera:** descarga automática de datos reales, interfaz web, análisis por tipo de neumático o clima, aprendizaje automático.
+La primera versión trabaja con una sesión por archivo y hasta tres sectores por vuelta. No descarga datos reales ni analiza neumáticos, clima o estrategias; tampoco incluye una interfaz web o aprendizaje automático.
 
 ## 2. Datos
 
@@ -86,7 +95,7 @@ python -m unittest discover -s tests -v
 ## 4. Organización del código
 
 ```
-Tp2_Tomas_Cappa/
+tp2-cappa/
 |-- README.md
 |-- requirements.txt
 |-- .gitignore

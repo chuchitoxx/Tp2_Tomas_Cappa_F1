@@ -1,42 +1,18 @@
-# TP2 - Validador de sesiones y comparador de vueltas
+# TP2: comparador de vueltas de Fórmula 1
 
-Este repositorio contiene el proyecto del Trabajo Práctico 2 de Programación Orientada a Datos.
+Aplicación de consola para validar una sesión de vueltas y comparar el rendimiento de sus pilotos. El proyecto está dentro de `tp2-cappa/`.
 
-## Estructura
-
-- `tp2-cappa/` — proyecto principal con código fuente, datos y pruebas.
-
-## Proyecto principal
-
-La aplicación se ejecuta dentro de la carpeta `tp2-cappa`:
+## Ejecutar
 
 ```bash
 cd tp2-cappa
-python src/main.py --entrada data/sesion_f1.csv
-```
-
-## Objetivo
-
-Analizar una sesión de Fórmula 1 simulada, validar registros, excluir vueltas problemáticas y comparar pilotos mediante métricas de rendimiento.
-
-## Estado
-
-Este repositorio queda preparado para versionado y entrega del trabajo final.
-
-## Verificación final
-
-Validado el 2026-10-15 con `python -m unittest discover -s tests -v` y ejecución real de la aplicación: 35 pruebas correctas; 3 pruebas de gráficos se omitieron porque `matplotlib` no está instalado.
-
-## Verificación rápida
-
-```bash
-cd tp2-cappa
-python -m unittest discover -s tests -v
 python src/main.py --entrada data/sesion_f1.csv --sin-graficos
 ```
 
-La evidencia de ejecución queda documentada en `tp2-cappa/VALIDACION.md`.
+Para ejecutar las pruebas:
 
-## Checklist de entrega
+```bash
+python -m unittest discover -s tp2-cappa/tests -v
+```
 
-La preparación del trabajo final queda resumida en `tp2-cappa/ENTREGA.md`.
+El [README del proyecto](tp2-cappa/README.md) explica las opciones, los datos y los resultados. La [validación](tp2-cappa/VALIDACION.md) y el [cotejo con la consigna](tp2-cappa/ENTREGA.md) tienen más detalles.

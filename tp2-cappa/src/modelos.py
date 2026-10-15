@@ -13,8 +13,13 @@ class Vuelta:
         sectores: lista [s1, s2, s3] en segundos, o None si no se registraron.
     """
 
-    def __init__(self, piloto: str, numero: int, tiempo_s: float,
-                 sectores: Optional[List[float]] = None):
+    def __init__(
+        self,
+        piloto: str,
+        numero: int,
+        tiempo_s: float,
+        sectores: Optional[List[float]] = None,
+    ):
         self.piloto = piloto
         self.numero = numero
         self.tiempo_s = tiempo_s

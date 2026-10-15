@@ -12,13 +12,18 @@ import main as app  # noqa: E402
 
 try:
     import matplotlib  # noqa: F401
+
     HAY_MATPLOTLIB = True
 except ImportError:
     HAY_MATPLOTLIB = False
 
 CSV_PRUEBA = os.path.join(RAIZ, "data", "sesion_f1.csv")
-ESPERADOS = ["grafico_mejor_vuelta.png", "grafico_evolucion_vueltas.png",
-             "grafico_dispersion.png", "grafico_sectores.png"]
+ESPERADOS = [
+    "grafico_mejor_vuelta.png",
+    "grafico_evolucion_vueltas.png",
+    "grafico_dispersion.png",
+    "grafico_sectores.png",
+]
 
 
 @unittest.skipUnless(HAY_MATPLOTLIB, "matplotlib no está instalado")
@@ -33,12 +38,20 @@ class TestGraficos(unittest.TestCase):
 
     def test_un_solo_piloto_no_rompe(self):
         with tempfile.TemporaryDirectory() as tmp:
-            self.assertEqual(app.main(["--entrada", CSV_PRUEBA, "--salida", tmp, "--pilotos", "VER"]), 0)
+            self.assertEqual(
+                app.main(
+                    ["--entrada", CSV_PRUEBA, "--salida", tmp, "--pilotos", "VER"]
+                ),
+                0,
+            )
             self.assertTrue(os.path.isfile(os.path.join(tmp, "grafico_dispersion.png")))
 
     def test_sin_graficos_no_crea_png(self):
         with tempfile.TemporaryDirectory() as tmp:
-            self.assertEqual(app.main(["--entrada", CSV_PRUEBA, "--salida", tmp, "--sin-graficos"]), 0)
+            self.assertEqual(
+                app.main(["--entrada", CSV_PRUEBA, "--salida", tmp, "--sin-graficos"]),
+                0,
+            )
             self.assertFalse(any(n.endswith(".png") for n in os.listdir(tmp)))
 
 
