@@ -36,6 +36,7 @@ class FuenteCSV(FuenteDatos):
             lector = csv.DictReader(f)
             if lector.fieldnames is None:
                 raise ValueError(f"El CSV '{ruta}' está vacío o no tiene encabezado.")
+            lector.fieldnames = [nombre.strip() for nombre in lector.fieldnames]
             return [{k: (v if v is not None else "") for k, v in fila.items()}
                     for fila in lector]
 

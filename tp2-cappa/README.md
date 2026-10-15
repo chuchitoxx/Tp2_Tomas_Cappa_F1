@@ -45,8 +45,8 @@ Sesión **simulada** (semilla fija) con 91 registros y 6 variables, equivalente 
 Requiere **Python 3.9 o superior**. El análisis usa sólo la biblioteca estándar; `matplotlib` se necesita únicamente para los gráficos (si no está instalado, la aplicación avisa y sigue sin ellos).
 
 ```bash
-git clone https://github.com/chuchitoxx/Tp2_Tomas_Cappa.git
-cd Tp2_Tomas_Cappa
+git clone https://github.com/chuchitoxx/Tp2_Tomas_Cappa_F1.git
+cd Tp2_Tomas_Cappa_F1/tp2-cappa
 ```
 
 (Opcional) entorno virtual:

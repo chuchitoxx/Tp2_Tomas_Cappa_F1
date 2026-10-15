@@ -1,6 +1,8 @@
 # Checklist de entrega
 
-## Requisitos de la consigna
+## Checklist interno (pendiente de cotejo con la consigna)
+
+No se adjuntó la consigna ni la rúbrica oficial. Este checklist resume lo que documenta el proyecto, pero no confirma por sí solo que cubra todos los criterios del docente.
 
 - [x] Problema y alcance documentados.
 - [x] Datos y procedencia explicados.

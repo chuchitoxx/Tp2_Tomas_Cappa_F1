@@ -212,6 +212,17 @@ class TestFuentes(unittest.TestCase):
         """Propiedad: CSV y JSON equivalentes se leen igual."""
         self.assertEqual(FuenteCSV().cargar(CSV_PRUEBA), FuenteJSON().cargar(JSON_PRUEBA))
 
+    def test_csv_recorta_espacios_en_encabezados(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ruta = os.path.join(tmp, "espacios.csv")
+            with open(ruta, "w", encoding="utf-8") as f:
+                f.write(" piloto, vuelta, tiempo \nVER,1,1:24.675\n")
+
+            self.assertEqual(
+                FuenteCSV().cargar(ruta),
+                [{"piloto": "VER", "vuelta": "1", "tiempo": "1:24.675"}],
+            )
+
     def test_fuente_para_por_extension(self):
         self.assertIsInstance(fuente_para("a.csv"), FuenteCSV)
         self.assertIsInstance(fuente_para("a.JSON"), FuenteJSON)

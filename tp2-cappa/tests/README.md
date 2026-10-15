@@ -1,6 +1,6 @@
 # Pruebas
 
-Las pruebas usan `unittest` (biblioteca estándar). Se ejecutan desde la **raíz del repositorio**:
+Las pruebas usan `unittest` (biblioteca estándar). Se ejecutan desde la **raíz del proyecto** (`tp2-cappa/`):
 
 ```bash
 python -m unittest discover -s tests -v
@@ -18,4 +18,4 @@ python -m unittest discover -s tests -v
 | Gráficos (se omiten sin matplotlib) | `test_se_generan_los_cuatro_graficos`, `test_un_solo_piloto_no_rompe`, `test_sin_graficos_no_crea_png` |
 | Jerarquía de fuentes | `test_jerarquia`, `test_fuente_para_por_extension` |
 
-Resultado esperado: `Ran 34 tests ... OK`. Los tests de gráficos requieren `pip install -r requirements.txt`; si matplotlib no está, se omiten (`skipped`).
+Resultado esperado: `Ran 35 tests ... OK`. Los tests de gráficos requieren `pip install -r requirements.txt`; si matplotlib no está, se omiten (`skipped`).

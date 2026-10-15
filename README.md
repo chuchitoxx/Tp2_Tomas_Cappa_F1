@@ -25,13 +25,13 @@ Este repositorio queda preparado para versionado y entrega del trabajo final.
 
 ## Verificación final
 
-Validado el 2026-10-14 con `pytest -q` y ejecución real de la aplicación: 34 pruebas correctas y 6 subtests pasados.
+Validado el 2026-10-15 con `python -m unittest discover -s tests -v` y ejecución real de la aplicación: 35 pruebas correctas; 3 pruebas de gráficos se omitieron porque `matplotlib` no está instalado.
 
 ## Verificación rápida
 
 ```bash
 cd tp2-cappa
-pytest -q
+python -m unittest discover -s tests -v
 python src/main.py --entrada data/sesion_f1.csv --sin-graficos
 ```
 
