@@ -4,6 +4,7 @@ import csv
 import os
 import re
 import statistics
+from decimal import Decimal, InvalidOperation
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from modelos import Vuelta
@@ -136,10 +137,15 @@ def limpiar_datos(
             continue
 
         try:
-            numero = int(fila.get("vuelta", ""))
-            if numero < 1:
+            numero_decimal = Decimal(fila.get("vuelta", ""))
+            if (
+                not numero_decimal.is_finite()
+                or numero_decimal < 1
+                or numero_decimal != numero_decimal.to_integral_value()
+            ):
                 raise ValueError
-        except ValueError:
+            numero = int(numero_decimal)
+        except (InvalidOperation, ValueError):
             rechazar(fila, f"número de vuelta inválido: '{fila.get('vuelta', '')}'")
             continue
 

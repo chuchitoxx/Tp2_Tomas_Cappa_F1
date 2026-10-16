@@ -75,6 +75,11 @@ class TestLimpieza(unittest.TestCase):
         vueltas, _ = preparar([fila("ver", 1, "1:25.000")])
         self.assertEqual(vueltas[0].piloto, "VER")
 
+    def test_numero_de_vuelta_decimal_no_entero_se_rechaza(self):
+        vueltas, rechazos = preparar([fila("VER", "2.5", "1:25.000")])
+        self.assertEqual(vueltas, [])
+        self.assertIn("número de vuelta inválido", rechazos[0]["motivo"])
+
     def test_rechazos_con_motivo(self):
         filas = [
             fila("H4M", 1, "1:25.000"),  # piloto inválido
@@ -245,6 +250,17 @@ class TestFuentes(unittest.TestCase):
         self.assertEqual(
             FuenteCSV().cargar(CSV_PRUEBA), FuenteJSON().cargar(JSON_PRUEBA)
         )
+
+    def test_json_acepta_numero_de_vuelta_decimal_entero(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            ruta = os.path.join(tmp, "vuelta_decimal.json")
+            with open(ruta, "w", encoding="utf-8") as f:
+                f.write('[{"piloto":"VER","vuelta":2.0,"tiempo":"1:25.000"}]')
+
+            vueltas, rechazos = preparar(FuenteJSON().cargar(ruta))
+
+        self.assertEqual([v.numero for v in vueltas], [2])
+        self.assertEqual(rechazos, [])
 
     def test_csv_recorta_espacios_en_encabezados(self):
         with tempfile.TemporaryDirectory() as tmp:
