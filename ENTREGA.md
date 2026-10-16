@@ -13,7 +13,7 @@
 ## Evidencia
 
 - `README.md` explica el problema, uso, diseño, decisiones de limpieza y limitaciones; además, presenta preguntas de análisis con su resolución teórica basada en los resultados del ejemplo.
-- `data/DATOS.md` describe los datos, su generación y procedencia.
+- `data/README.md` describe los datos, su generación y procedencia.
 - `src/` contiene fuentes CSV/JSON, el modelo de dominio, la validación y el análisis.
-- `tests/` contiene verificaciones ejecutables; `tests/PRUEBAS.md` resume su cobertura.
+- `tests/` contiene verificaciones ejecutables; `tests/README.md` resume su cobertura.
 - `VALIDACION.md` registra los comandos y resultados de la última ejecución.

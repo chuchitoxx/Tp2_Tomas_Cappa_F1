@@ -41,13 +41,13 @@ La primera versión trabaja con una sesión por archivo y hasta tres sectores po
 
 ## 2. Datos
 
-Sesión **simulada** (semilla fija) con 91 registros y 6 variables, equivalente en CSV y JSON. Está documentada en detalle en [`data/DATOS.md`](data/DATOS.md).
+Sesión **simulada** (semilla fija) con 91 registros y 6 variables, equivalente en CSV y JSON. Está documentada en detalle en [`data/README.md`](data/README.md).
 
 - **Fuente:** generada con `scripts/generar_datos.py` (no son tiempos reales).
 - **Responsable y licencia:** obra propia del autor, de libre uso académico. Fecha de generación: 13/10/2026.
 - **Unidad de análisis:** una fila = una vuelta cronometrada de un piloto.
 - **Variables:** `piloto`, `vuelta`, `tiempo`, `s1`, `s2`, `s3`.
-- **Limitaciones:** modelo de tiempos simplificado; ver `data/DATOS.md`.
+- **Limitaciones:** modelo de tiempos simplificado; ver `data/README.md`.
 
 ## 3. Instalación y uso
 
