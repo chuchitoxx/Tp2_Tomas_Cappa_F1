@@ -1,42 +1,72 @@
-# TP2 - Validador de sesiones y comparador de vueltas
+# TP2: análisis de vueltas de Fórmula 1
 
-Este repositorio contiene el proyecto del Trabajo Práctico 2 de Programación Orientada a Datos.
+Este programa analiza una sesión de vueltas simulada y compara el rendimiento de los pilotos.
 
-## Estructura
+## Empezar (Windows)
 
-- `tp2-cappa/` — proyecto principal con código fuente, datos y pruebas.
+1. Instala Python 3.9 o una versión más nueva, si todavía no lo tienes.
+2. Abre esta carpeta y haz doble clic en `ejecutar.bat`.
+3. Mira el resumen en la ventana. Los archivos con los resultados quedan en `outputs`.
 
-## Proyecto principal
+No necesitas saber programar ni usar Git para ejecutar el programa.
 
-La aplicación se ejecuta dentro de la carpeta `tp2-cappa`:
+Los gráficos son opcionales. Para instalarlos, abre una terminal en esta carpeta y ejecuta una sola vez:
 
-```bash
-cd tp2-cappa
-python src/main.py --entrada data/sesion_f1.csv
+```text
+py -m pip install -r requirements.txt
 ```
 
-## Objetivo
+Si no instalas los gráficos, el análisis igual funciona.
 
-Analizar una sesión de Fórmula 1 simulada, validar registros, excluir vueltas problemáticas y comparar pilotos mediante métricas de rendimiento.
+## Qué hace
 
-## Estado
+- Revisa los datos y explica qué filas no se pueden usar.
+- Compara los tiempos de los pilotos.
+- Guarda tablas y, si está instalado matplotlib, gráficos en `outputs`.
 
-Este repositorio queda preparado para versionado y entrega del trabajo final.
+## Resultado del ejemplo
 
-## Verificación final
+La validación del archivo de ejemplo dejó un balance claro:
 
-Validado el 2026-10-14 con `pytest -q` y ejecución real de la aplicación: 34 pruebas correctas y 6 subtests pasados.
+- 91 registros leídos
+- 84 válidos
+- 7 rechazados
+- 4 vueltas excluidas por incidencias
+- 80 vueltas utilizadas para comparar
 
-## Verificación rápida
+Esto significa que la mayoría de los datos del archivo pudo usarse en la comparación final, y los descartes quedaron registrados en `outputs` para revisar qué falló.
 
-```bash
-cd tp2-cappa
-pytest -q
-python src/main.py --entrada data/sesion_f1.csv --sin-graficos
+### Ranking del ejemplo
+
+1. VER — mejor vuelta: 1:24.675
+2. NOR — mejor vuelta: 1:25.011
+3. HAM — mejor vuelta: 1:25.248
+4. RUS — mejor vuelta: 1:25.278
+5. LEC — mejor vuelta: 1:25.440
+6. ALO — mejor vuelta: 1:25.627
+
+## Carpetas
+
+- `data`: archivo de ejemplo.
+- `src`: programa. Para empezar, no hace falta modificar estos archivos.
+- `tests`: pruebas automáticas.
+- `scripts`: herramienta para volver a generar los datos simulados.
+- `docs`: ejemplos de gráficos.
+
+## Si quieres ejecutarlo desde una terminal
+
+Abre una terminal en esta carpeta y copia:
+
+```text
+py src\main.py
 ```
 
-La evidencia de ejecución queda documentada en `tp2-cappa/VALIDACION.md`.
+El archivo de ejemplo ya está seleccionado por defecto. Si quieres analizar otro archivo, puedes indicar su ruta con `--entrada`.
 
-## Checklist de entrega
+Para ejecutar las pruebas:
 
-La preparación del trabajo final queda resumida en `tp2-cappa/ENTREGA.md`.
+```text
+py -m unittest discover -s tests -v
+```
+
+Consulta [ENTREGA.md](ENTREGA.md) para el checklist del trabajo y [VALIDACION.md](VALIDACION.md) para la comprobación realizada.
