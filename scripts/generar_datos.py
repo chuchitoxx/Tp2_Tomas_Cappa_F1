@@ -2,7 +2,7 @@
 
 Los datos son SIMULADOS (semilla fija) y se parecen a una sesión de Fórmula 1:
 6 pilotos, 15 vueltas cada uno, tres sectores por vuelta. Se inyectan errores
-conocidos para poder demostrar la validación (ver data/README.md).
+conocidos para poder demostrar la validación (ver data/DATOS.md).
 
 Uso (desde la raíz del repositorio):
     python scripts/generar_datos.py

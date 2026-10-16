@@ -1,22 +1,23 @@
-# Entornos locales
+# Entornos virtuales
 .venv/
+.venv-*/
 venv/
+env/
 .env
+*.key
 
-# VS Code
+# Editores
 .vscode/
-!.vscode/
-!.vscode/launch.json
+.idea/
 
-# Python cache
+# Cachés y archivos compilados de Python
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 
-# Salidas generadas
+# Salidas generadas por la aplicación
 outputs/
-**/outputs/
 
 # Archivos del sistema
 .DS_Store

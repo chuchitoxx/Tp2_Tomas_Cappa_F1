@@ -5,13 +5,13 @@
             "type": "debugpy",
             "request": "launch",
             "name": "Comparador F1",
-            "program": "${workspaceFolder}/tp2-cappa/src/main.py",
+            "program": "${workspaceFolder}/src/main.py",
             "args": [
                 "--entrada",
                 "data/sesion_f1.csv",
                 "--sin-graficos"
             ],
-            "cwd": "${workspaceFolder}/tp2-cappa",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
         }
     ]

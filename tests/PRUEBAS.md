@@ -1,6 +1,6 @@
 # Pruebas
 
-Desde la carpeta `tp2-cappa/`, ejecutar:
+Desde la raíz del repositorio, ejecutar:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -15,4 +15,4 @@ python -m unittest discover -s tests -v
 - Propiedades del resultado: se conservan los registros y los estadísticos son coherentes.
 - Gráficos, cuando `matplotlib` está instalado.
 
-La última ejecución encontró **35 pruebas correctas**, incluidas las tres de gráficos. Si falta `matplotlib`, estas pruebas se omiten. Para instalarlo junto con la dependencia, ejecutar `pip install -r requirements.txt`.
+La cantidad y el resultado de las pruebas ejecutadas se registran en `VALIDACION.md`. Si falta `matplotlib`, las pruebas de gráficos se omiten. Para instalarlo junto con la dependencia, ejecutar `pip install -r requirements.txt`.
