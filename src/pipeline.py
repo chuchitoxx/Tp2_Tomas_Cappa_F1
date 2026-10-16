@@ -14,6 +14,7 @@ COLUMNAS_OBLIGATORIAS = ("piloto", "vuelta", "tiempo")
 COLUMNAS_SECTORES = ("s1", "s2", "s3")
 TIEMPO_MIN_S = 30.0  # por debajo de esto el tiempo no es físicamente razonable
 TIEMPO_MAX_S = 300.0  # por encima, no es una vuelta de carrera normal
+VUELTA_MAX = 999
 
 # Código de piloto: exactamente tres letras mayúsculas (ej. VER, NOR).
 PATRON_PILOTO = re.compile(r"^[A-Z]{3}$")
@@ -107,7 +108,7 @@ def limpiar_datos(
 
     Reglas de rechazo (cada registro se rechaza una sola vez, por el primer motivo):
       1. código de piloto inválido (no cumple ^[A-Z]{3}$);
-      2. número de vuelta no entero o menor que 1;
+      2. número de vuelta no entero o fuera de [1, VUELTA_MAX];
       3. tiempo faltante (vuelta incompleta) o con formato inválido;
       4. tiempo fuera de [TIEMPO_MIN_S, TIEMPO_MAX_S];
       5. sectores incompletos o inválidos (se aceptan 0 o los 3 sectores);
@@ -141,6 +142,7 @@ def limpiar_datos(
             if (
                 not numero_decimal.is_finite()
                 or numero_decimal < 1
+                or numero_decimal > VUELTA_MAX
                 or numero_decimal != numero_decimal.to_integral_value()
             ):
                 raise ValueError

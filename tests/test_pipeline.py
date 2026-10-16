@@ -80,6 +80,11 @@ class TestLimpieza(unittest.TestCase):
         self.assertEqual(vueltas, [])
         self.assertIn("número de vuelta inválido", rechazos[0]["motivo"])
 
+    def test_numero_de_vuelta_excesivo_se_rechaza(self):
+        vueltas, rechazos = preparar([fila("VER", "1e999999999", "1:25.000")])
+        self.assertEqual(vueltas, [])
+        self.assertEqual(len(rechazos), 1)
+
     def test_rechazos_con_motivo(self):
         filas = [
             fila("H4M", 1, "1:25.000"),  # piloto inválido
