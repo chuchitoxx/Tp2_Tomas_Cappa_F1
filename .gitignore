@@ -5,6 +5,8 @@ venv/
 
 # VS Code
 .vscode/
+!.vscode/
+!.vscode/launch.json
 
 # Python cache
 __pycache__/

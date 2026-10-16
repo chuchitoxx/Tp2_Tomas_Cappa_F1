@@ -11,8 +11,8 @@ from modelos import Vuelta
 # ---------------------------------------------------------------- constantes
 COLUMNAS_OBLIGATORIAS = ("piloto", "vuelta", "tiempo")
 COLUMNAS_SECTORES = ("s1", "s2", "s3")
-TIEMPO_MIN_S = 30.0    # por debajo de esto el tiempo no es físicamente razonable
-TIEMPO_MAX_S = 300.0   # por encima, no es una vuelta de carrera normal
+TIEMPO_MIN_S = 30.0  # por debajo de esto el tiempo no es físicamente razonable
+TIEMPO_MAX_S = 300.0  # por encima, no es una vuelta de carrera normal
 
 # Código de piloto: exactamente tres letras mayúsculas (ej. VER, NOR).
 PATRON_PILOTO = re.compile(r"^[A-Z]{3}$")
@@ -41,7 +41,9 @@ def convertir_tiempo(texto) -> float:
     t = str(texto).strip()
     m = PATRON_TIEMPO.match(t)
     if not m:
-        raise ValueError(f"formato de tiempo no reconocido: '{t}' (se esperaba M:SS.mmm o SS.mmm)")
+        raise ValueError(
+            f"formato de tiempo no reconocido: '{t}' (se esperaba M:SS.mmm o SS.mmm)"
+        )
     fraccion = float("0." + m.group("ms"))
     if m.group("min") is not None:
         segundos = int(m.group("min")) * 60 + int(m.group("seg")) + fraccion
@@ -97,7 +99,9 @@ def validar_esquema(filas: List[Dict[str, str]]) -> None:
 
 
 # -------------------------------------------------------------------- limpieza
-def limpiar_datos(filas: List[Dict[str, str]]) -> Tuple[List[Vuelta], List[Dict[str, str]]]:
+def limpiar_datos(
+    filas: List[Dict[str, str]],
+) -> Tuple[List[Vuelta], List[Dict[str, str]]]:
     """Convierte filas en objetos Vuelta y separa los registros rechazados.
 
     Reglas de rechazo (cada registro se rechaza una sola vez, por el primer motivo):
@@ -114,17 +118,21 @@ def limpiar_datos(filas: List[Dict[str, str]]) -> Tuple[List[Vuelta], List[Dict[
     vistos: Dict[Tuple[str, int], str] = {}
 
     def rechazar(fila, motivo):
-        rechazos.append({
-            "registro": fila.get("_registro", ""),
-            "piloto": fila.get("piloto", ""),
-            "vuelta": fila.get("vuelta", ""),
-            "motivo": motivo,
-        })
+        rechazos.append(
+            {
+                "registro": fila.get("_registro", ""),
+                "piloto": fila.get("piloto", ""),
+                "vuelta": fila.get("vuelta", ""),
+                "motivo": motivo,
+            }
+        )
 
     for fila in filas:
         piloto = fila.get("piloto", "")
         if not PATRON_PILOTO.match(piloto):
-            rechazar(fila, f"código de piloto inválido: '{piloto}' (se esperan 3 letras)")
+            rechazar(
+                fila, f"código de piloto inválido: '{piloto}' (se esperan 3 letras)"
+            )
             continue
 
         try:
@@ -138,11 +146,16 @@ def limpiar_datos(filas: List[Dict[str, str]]) -> Tuple[List[Vuelta], List[Dict[
         try:
             tiempo = convertir_tiempo(fila.get("tiempo", ""))
         except ValueError as e:
-            motivo = "vuelta incompleta (sin tiempo)" if str(e) == "tiempo vacío" else str(e)
+            motivo = (
+                "vuelta incompleta (sin tiempo)" if str(e) == "tiempo vacío" else str(e)
+            )
             rechazar(fila, motivo)
             continue
         if not (TIEMPO_MIN_S <= tiempo <= TIEMPO_MAX_S):
-            rechazar(fila, f"tiempo fuera de rango: {tiempo} s (válido {TIEMPO_MIN_S}-{TIEMPO_MAX_S})")
+            rechazar(
+                fila,
+                f"tiempo fuera de rango: {tiempo} s (válido {TIEMPO_MIN_S}-{TIEMPO_MAX_S})",
+            )
             continue
 
         crudos = [fila.get(c, "") for c in COLUMNAS_SECTORES]
@@ -158,7 +171,10 @@ def limpiar_datos(filas: List[Dict[str, str]]) -> Tuple[List[Vuelta], List[Dict[
 
         clave = (piloto, numero)
         if clave in vistos:
-            rechazar(fila, f"duplicado de {piloto} vuelta {numero} (ya figura en el registro {vistos[clave]})")
+            rechazar(
+                fila,
+                f"duplicado de {piloto} vuelta {numero} (ya figura en el registro {vistos[clave]})",
+            )
             continue
         vistos[clave] = fila.get("_registro", "")
 
@@ -204,23 +220,39 @@ def seleccionar_vueltas(
     incidencias: List[Dict[str, str]] = []
 
     for piloto in elegidos:
-        propias = sorted((v for v in vueltas if v.piloto == piloto), key=lambda v: v.numero)
-        mediana = statistics.median(v.tiempo_s for v in propias) if len(propias) >= 3 else None
+        propias = sorted(
+            (v for v in vueltas if v.piloto == piloto), key=lambda v: v.numero
+        )
+        mediana = (
+            statistics.median(v.tiempo_s for v in propias)
+            if len(propias) >= 3
+            else None
+        )
         for v in propias:
             if not v.es_consistente(tolerancia):
-                incidencias.append({
-                    "piloto": piloto, "vuelta": str(v.numero),
-                    "tipo": "sectores inconsistentes",
-                    "detalle": (f"tiempo {v.tiempo_s:.3f} s vs suma de sectores {v.suma_sectores():.3f} s "
-                                f"(diferencia {v.diferencia_sectores():.3f} s > tolerancia {tolerancia} s)"),
-                })
+                incidencias.append(
+                    {
+                        "piloto": piloto,
+                        "vuelta": str(v.numero),
+                        "tipo": "sectores inconsistentes",
+                        "detalle": (
+                            f"tiempo {v.tiempo_s:.3f} s vs suma de sectores {v.suma_sectores():.3f} s "
+                            f"(diferencia {v.diferencia_sectores():.3f} s > tolerancia {tolerancia} s)"
+                        ),
+                    }
+                )
             elif mediana is not None and v.tiempo_s > umbral_lenta * mediana:
-                incidencias.append({
-                    "piloto": piloto, "vuelta": str(v.numero),
-                    "tipo": "vuelta lenta",
-                    "detalle": (f"tiempo {v.tiempo_s:.3f} s supera {umbral_lenta}x la mediana "
-                                f"del piloto ({mediana:.3f} s); posible vuelta de boxes"),
-                })
+                incidencias.append(
+                    {
+                        "piloto": piloto,
+                        "vuelta": str(v.numero),
+                        "tipo": "vuelta lenta",
+                        "detalle": (
+                            f"tiempo {v.tiempo_s:.3f} s supera {umbral_lenta}x la mediana "
+                            f"del piloto ({mediana:.3f} s); posible vuelta de boxes"
+                        ),
+                    }
+                )
             else:
                 seleccion.append(v)
     return seleccion, incidencias
@@ -236,12 +268,19 @@ def comparar_pilotos(seleccion: Sequence[Vuelta], pilotos: Sequence[str]) -> Lis
     """
     resultado = []
     for piloto in pilotos:
-        propias = sorted((v for v in seleccion if v.piloto == piloto), key=lambda v: v.numero)
+        propias = sorted(
+            (v for v in seleccion if v.piloto == piloto), key=lambda v: v.numero
+        )
         fila = {
-            "piloto": piloto, "n_vueltas": len(propias),
+            "piloto": piloto,
+            "n_vueltas": len(propias),
             "vueltas_usadas": " ".join(str(v.numero) for v in propias),
-            "mejor_vuelta": None, "mejor_s": None, "media_s": None,
-            "desvio_s": None, "dif_al_mejor_s": None, "nota": "",
+            "mejor_vuelta": None,
+            "mejor_s": None,
+            "media_s": None,
+            "desvio_s": None,
+            "dif_al_mejor_s": None,
+            "nota": "",
         }
         if not propias:
             fila["nota"] = "sin vueltas utilizables"
@@ -263,11 +302,19 @@ def comparar_pilotos(seleccion: Sequence[Vuelta], pilotos: Sequence[str]) -> Lis
         for f in con_datos:
             f["dif_al_mejor_s"] = round(f["mejor_s"] - referencia, 3)
 
-    resultado.sort(key=lambda f: (f["mejor_s"] is None, f["mejor_s"] if f["mejor_s"] is not None else 0, f["piloto"]))
+    resultado.sort(
+        key=lambda f: (
+            f["mejor_s"] is None,
+            f["mejor_s"] if f["mejor_s"] is not None else 0,
+            f["piloto"],
+        )
+    )
     return resultado
 
 
-def comparar_sectores(seleccion: Sequence[Vuelta], pilotos: Sequence[str]) -> List[Dict]:
+def comparar_sectores(
+    seleccion: Sequence[Vuelta], pilotos: Sequence[str]
+) -> List[Dict]:
     """Mejor tiempo de cada sector por piloto y 'vuelta ideal' (suma de sus mejores sectores).
 
     Sólo usa vueltas de la selección que tengan los tres sectores. Si un piloto no
@@ -276,12 +323,22 @@ def comparar_sectores(seleccion: Sequence[Vuelta], pilotos: Sequence[str]) -> Li
     filas = []
     for piloto in pilotos:
         con = [v for v in seleccion if v.piloto == piloto and v.tiene_sectores()]
-        fila = {"piloto": piloto, "n_vueltas_con_sectores": len(con),
-                "mejor_s1": None, "mejor_s2": None, "mejor_s3": None, "vuelta_ideal_s": None}
+        fila = {
+            "piloto": piloto,
+            "n_vueltas_con_sectores": len(con),
+            "mejor_s1": None,
+            "mejor_s2": None,
+            "mejor_s3": None,
+            "vuelta_ideal_s": None,
+        }
         if con:
             mejores = [round(min(v.sectores[i] for v in con), 3) for i in range(3)]
-            fila.update(mejor_s1=mejores[0], mejor_s2=mejores[1], mejor_s3=mejores[2],
-                        vuelta_ideal_s=round(sum(mejores), 3))
+            fila.update(
+                mejor_s1=mejores[0],
+                mejor_s2=mejores[1],
+                mejor_s3=mejores[2],
+                vuelta_ideal_s=round(sum(mejores), 3),
+            )
         filas.append(fila)
     return filas
 
@@ -291,14 +348,20 @@ def verificar_resultado(resultado: Sequence[Dict], seleccion: Sequence[Vuelta]) 
     pilotos = {f["piloto"] for f in resultado}
     esperadas = sum(1 for v in seleccion if v.piloto in pilotos)
     if sum(f["n_vueltas"] for f in resultado) != esperadas:
-        raise ResultadoInconsistenteError("La cantidad de vueltas del resultado no coincide con la selección.")
+        raise ResultadoInconsistenteError(
+            "La cantidad de vueltas del resultado no coincide con la selección."
+        )
     for f in resultado:
         if len(f["vueltas_usadas"].split()) != f["n_vueltas"]:
-            raise ResultadoInconsistenteError(f"{f['piloto']}: lista de vueltas usadas incoherente.")
+            raise ResultadoInconsistenteError(
+                f"{f['piloto']}: lista de vueltas usadas incoherente."
+            )
         if f["n_vueltas"] == 0:
             continue
         if not (TIEMPO_MIN_S <= f["mejor_s"] <= f["media_s"]):
-            raise ResultadoInconsistenteError(f"{f['piloto']}: se esperaba mejor <= media.")
+            raise ResultadoInconsistenteError(
+                f"{f['piloto']}: se esperaba mejor <= media."
+            )
         if f["desvio_s"] is not None and f["desvio_s"] < 0:
             raise ResultadoInconsistenteError(f"{f['piloto']}: desvío negativo.")
 
@@ -312,12 +375,27 @@ def _guardar_csv(ruta: str, filas: Sequence[Dict], columnas: Sequence[str]) -> N
         escritor = csv.DictWriter(f, fieldnames=columnas, extrasaction="ignore")
         escritor.writeheader()
         for fila in filas:
-            escritor.writerow({c: ("" if fila.get(c) is None else fila.get(c)) for c in columnas})
+            escritor.writerow(
+                {c: ("" if fila.get(c) is None else fila.get(c)) for c in columnas}
+            )
 
 
 def guardar_resultado(resultado: Sequence[Dict], ruta: str) -> None:
-    _guardar_csv(ruta, resultado, ["piloto", "n_vueltas", "vueltas_usadas", "mejor_vuelta",
-                                   "mejor_s", "media_s", "desvio_s", "dif_al_mejor_s", "nota"])
+    _guardar_csv(
+        ruta,
+        resultado,
+        [
+            "piloto",
+            "n_vueltas",
+            "vueltas_usadas",
+            "mejor_vuelta",
+            "mejor_s",
+            "media_s",
+            "desvio_s",
+            "dif_al_mejor_s",
+            "nota",
+        ],
+    )
 
 
 def guardar_rechazos(rechazos: Sequence[Dict], ruta: str) -> None:
@@ -329,5 +407,15 @@ def guardar_incidencias(incidencias: Sequence[Dict], ruta: str) -> None:
 
 
 def guardar_sectores(sectores: Sequence[Dict], ruta: str) -> None:
-    _guardar_csv(ruta, sectores, ["piloto", "n_vueltas_con_sectores", "mejor_s1", "mejor_s2",
-                                  "mejor_s3", "vuelta_ideal_s"])
+    _guardar_csv(
+        ruta,
+        sectores,
+        [
+            "piloto",
+            "n_vueltas_con_sectores",
+            "mejor_s1",
+            "mejor_s2",
+            "mejor_s3",
+            "vuelta_ideal_s",
+        ],
+    )

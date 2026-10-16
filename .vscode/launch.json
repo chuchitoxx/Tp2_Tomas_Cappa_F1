@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Comparador F1",
+            "program": "${workspaceFolder}/tp2-cappa/src/main.py",
+            "args": [
+                "--entrada",
+                "data/sesion_f1.csv",
+                "--sin-graficos"
+            ],
+            "cwd": "${workspaceFolder}/tp2-cappa",
+            "console": "integratedTerminal"
+        }
+    ]
+}0
