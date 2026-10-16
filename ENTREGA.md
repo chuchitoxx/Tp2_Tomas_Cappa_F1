@@ -7,7 +7,7 @@
 - [x] **3. Flujo reproducible:** se leen CSV y JSON equivalentes, se valida el esquema, se registran rechazos e incidencias y se producen tablas y archivos de salida.
 - [x] **4. Conceptos de programación:** hay funciones separadas por responsabilidad, la clase de dominio `Vuelta`, la abstracción `FuenteDatos` con implementaciones CSV y JSON, expresiones regulares explicadas y validaciones complementarias.
 - [x] **5. Pruebas:** hay casos normales, inválidos y propiedades del resultado; el comando está documentado en el README y el resultado más reciente en `VALIDACION.md`.
-- [x] **6. Git/GitHub:** existe `.gitignore` para entornos, cachés y salidas, y los cambios se publicaron en commits concretos. El acceso al repositorio se verificó en GitHub.
+- [ ] **6. Git/GitHub:** existe `.gitignore` para entornos, cachés y salidas, y los cambios están organizados en commits concretos. Pendiente: publicarlos y confirmar en GitHub que la cátedra tenga acceso.
 - [ ] **7. Documentación y entrega:** el README cubre instalación, comandos, organización, ejemplos, limpieza, interpretación y limitaciones. Al momento de entregar, anotar el enlace y el hash del commit evaluado y preparar la defensa individual.
 
 ## Evidencia
