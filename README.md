@@ -1,6 +1,5 @@
 # TP2: análisis de vueltas de Fórmula 1
-
-Este programa analiza una sesión de vueltas simulada y compara el rendimiento de los pilotos.
+TP2 de Programación Orientada a Datos (UCA, 2026): Aplicación en Python para validar registros de vueltas de telemetría de Fórmula 1 y comparar tiempos por piloto, vuelta o sector.
 
 ## Empezar (Windows)
 
