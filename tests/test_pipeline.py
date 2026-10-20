@@ -332,6 +332,24 @@ class TestAplicacion(unittest.TestCase):
             self.assertEqual(self._ejecutar(CSV_PRUEBA, tmp, ["--pilotos", "ZZZ"]), 1)
             self.assertEqual(self._ejecutar(CSV_PRUEBA, tmp, ["--tolerancia", "-1"]), 1)
 
+    def test_sin_registros_validos_exporta_rechazos(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            entrada = os.path.join(tmp, "entrada.csv")
+            salida = os.path.join(tmp, "salida")
+            with open(entrada, "w", encoding="utf-8") as archivo:
+                archivo.write("piloto,vuelta,tiempo\nVER,1,invalido\n")
+
+            self.assertEqual(self._ejecutar(entrada, salida), 1)
+            with open(
+                os.path.join(salida, "rechazos.csv"), encoding="utf-8"
+            ) as archivo:
+                reporte = archivo.read()
+
+            self.assertIn("formato de tiempo no reconocido", reporte)
+            self.assertFalse(
+                os.path.exists(os.path.join(salida, "comparacion_pilotos.csv"))
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

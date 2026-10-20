@@ -92,6 +92,7 @@ def main(argv=None) -> int:
         # limpiar y transformar
         vueltas, rechazos = limpiar_datos(filas)
         if not vueltas:
+            guardar_rechazos(rechazos, os.path.join(args.salida, "rechazos.csv"))
             raise ValueError(
                 "Ningún registro superó la validación; revise el archivo de rechazos."
             )
