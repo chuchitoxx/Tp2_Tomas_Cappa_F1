@@ -1,6 +1,6 @@
 # Verificación
 
-**Fecha:** 20/10/2026  
+**Fecha:** 20/10/2026
 **Entorno:** Linux, Python 3.14.2
 
 Ejecutado desde la raíz del repositorio. Se comprobó también la equivalencia de los reportes CSV y JSON:
