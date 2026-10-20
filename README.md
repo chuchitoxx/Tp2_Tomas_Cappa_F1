@@ -39,41 +39,79 @@ La tabla de comparación muestra cuántas vueltas se usaron, la mejor vuelta, la
 
 La primera versión trabaja con una sesión por archivo y hasta tres sectores por vuelta. No descarga datos reales ni analiza neumáticos, clima o estrategias; tampoco incluye una interfaz web o aprendizaje automático.
 
-## 2. Datos
+## 2. Datos de entrada
 
-Sesión **simulada** (semilla fija) con 91 registros y 6 variables, equivalente en CSV y JSON. Está documentada en detalle en [`data/README.md`](data/README.md).
+Un **dato** es una observación que analiza el programa: en este proyecto, una fila representa una vuelta de un piloto. Los archivos `data/sesion_f1.csv` y `data/sesion_f1.json` son datos de ejemplo simulados; contienen a propósito algunos registros inválidos e incidencias para que se pueda observar la validación. **No son tiempos reales ni pruebas automáticas.**
 
-- **Fuente:** generada con `scripts/generar_datos.py` (no son tiempos reales).
-- **Responsable y licencia:** obra propia del autor, de libre uso académico. Fecha de generación: 13/10/2026.
-- **Unidad de análisis:** una fila = una vuelta cronometrada de un piloto.
-- **Variables:** `piloto`, `vuelta`, `tiempo`, `s1`, `s2`, `s3`.
-- **Limitaciones:** modelo de tiempos simplificado; ver `data/README.md`.
+La aplicación acepta CSV o JSON con el mismo esquema. Los detalles de procedencia y de los casos introducidos en el ejemplo están en [`data/README.md`](data/README.md).
 
-## 3. Instalación y uso
+| Campo | Obligatorio | Formato aceptado |
+|---|---|---|
+| `piloto` | Sí | Código de tres letras, por ejemplo `VER`. Se normaliza a mayúsculas. |
+| `vuelta` | Sí | Número entero entre 1 y 999. |
+| `tiempo` | Sí | `M:SS.mmm` (por ejemplo `1:25.123`) o `SS.mmm` (por ejemplo `85.123`); el valor debe estar entre 30 y 300 segundos. |
+| `s1`, `s2`, `s3` | No | Los tres sectores juntos o ninguno; cada valor debe ser numérico, mayor que 0 y menor que 300 segundos. La suma se compara con `tiempo` durante el análisis. |
 
-Requiere **Python 3.9 o superior**. El análisis usa sólo la biblioteca estándar; `matplotlib` se necesita únicamente para los gráficos (si no está instalado, la aplicación avisa y sigue sin ellos).
+Ejemplo mínimo CSV (la primera fila es el encabezado):
+
+```csv
+piloto,vuelta,tiempo,s1,s2,s3
+VER,1,1:25.123,28.000,34.000,23.123
+NOR,1,85.456,,,
+```
+
+En JSON se acepta una lista de objetos o un objeto que contenga la lista bajo la clave `vueltas`:
+
+```json
+[
+  {"piloto": "VER", "vuelta": 1, "tiempo": "1:25.123", "s1": 28, "s2": 34, "s3": 23.123},
+  {"piloto": "NOR", "vuelta": 1, "tiempo": "85.456"}
+]
+```
+
+## 3. Instalación y reproducción en Linux
+
+Requiere **Python 3.9 o superior**. El análisis y las pruebas usan la biblioteca estándar; `matplotlib` sólo hace falta para generar gráficos y ejecutar sus pruebas. Los comandos siguientes se ejecutan desde la raíz del repositorio, en una terminal Linux:
 
 ```bash
 git clone https://github.com/chuchitoxx/Tp2_Tomas_Cappa_F1.git
 cd Tp2_Tomas_Cappa_F1
+
+python3 --version
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-(Opcional) entorno virtual:
+Si Linux informa que no está disponible `venv`, instalá el paquete de entornos virtuales de Python que corresponda a tu distribución (por ejemplo, `python3-venv` en Debian o Ubuntu) y repetí la creación del entorno. La instalación de `requirements.txt` agrega `matplotlib`; se puede omitir si sólo se quieren procesar datos y correr pruebas sin gráficos.
+
+### Ejecutar y comprobar el ejemplo
+
+Este comando funciona también si no se instaló `matplotlib`:
 
 ```bash
-python -m venv .venv
-# Windows:  .venv\Scripts\activate
-# Linux/Mac: source .venv/bin/activate
-pip install -r requirements.txt
+python src/main.py --entrada data/sesion_f1.csv --sin-graficos
 ```
 
-**Ejecutar la aplicación:**
+Para generar los gráficos, quitá `--sin-graficos`:
 
 ```bash
 python src/main.py --entrada data/sesion_f1.csv
 python src/main.py --entrada data/sesion_f1.json
 python src/main.py --entrada data/sesion_f1.csv --pilotos VER NOR LEC --tolerancia 0.1
 ```
+
+Con el CSV de ejemplo, el primer comando debe terminar con código de salida `0` e informar **91 registros leídos, 84 válidos, 7 rechazados, 4 vueltas excluidas y 80 utilizadas**. La tabla debe mostrar a VER como la vuelta más rápida (`1:24.675`) y a LEC con el menor desvío (`0.219 s`). Los archivos se crean en `outputs/`; se pueden abrir con una hoja de cálculo o inspeccionar desde la terminal.
+
+Para verificar que CSV y JSON producen el mismo reporte:
+
+```bash
+python src/main.py --entrada data/sesion_f1.csv --salida /tmp/reporte-csv --sin-graficos
+python src/main.py --entrada data/sesion_f1.json --salida /tmp/reporte-json --sin-graficos
+diff -u /tmp/reporte-csv/comparacion_pilotos.csv /tmp/reporte-json/comparacion_pilotos.csv
+```
+
+Si los formatos son equivalentes, `diff` no muestra diferencias. `--salida` permite elegir una carpeta distinta de `outputs/`.
 
 | Argumento | Descripción | Por defecto |
 |---|---|---|
@@ -84,13 +122,17 @@ python src/main.py --entrada data/sesion_f1.csv --pilotos VER NOR LEC --toleranc
 | `--salida` | Carpeta de salida | `outputs` |
 | `--sin-graficos` | No genera los gráficos (no requiere matplotlib) | — |
 
-**Ejecutar las pruebas:**
+### Ejecutar las pruebas automáticas
+
+Una **prueba** es una verificación ejecutable del comportamiento del programa; no es un dato de entrada ni una conclusión del análisis. La suite comprueba lectura CSV/JSON, conversiones, validaciones, limpieza, métricas, salidas y gráficos. Se ejecuta desde la raíz, con el entorno virtual activo:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-**Regenerar los datos simulados** (opcional): `python scripts/generar_datos.py`
+Si todo está correcto, el comando termina con `OK` y código de salida `0`. Las pruebas de gráficos se omiten si `matplotlib` no está instalado. La salida registrada en la última verificación está en [`VALIDACION.md`](VALIDACION.md).
+
+Para volver a generar los datos simulados (opcional), ejecutá `python scripts/generar_datos.py`; la semilla fija produce el mismo ejemplo.
 
 ## 4. Organización del código
 
@@ -152,6 +194,20 @@ Las siguientes exclusiones **no** son errores de datos, sino criterios de compar
 |---|---|
 | Sectores inconsistentes | Excluye si `|tiempo − (s1+s2+s3)| >` tolerancia |
 | Vuelta lenta | Excluye si el tiempo supera `1.15 ×` la mediana del piloto (probable vuelta de boxes); sólo se evalúa con 3 o más vueltas |
+
+### Si una entrada está mal cargada
+
+El programa informa errores del archivo o del esquema en la terminal y finaliza con código `1`. Un error en una fila, en cambio, se registra en `outputs/rechazos.csv` con su número de registro y el primer motivo detectado; las demás filas válidas siguen procesándose. Las vueltas válidas que no se usan para comparar quedan separadas en `outputs/incidencias.csv`.
+
+| Qué observás | Qué revisar |
+|---|---|
+| `No se encontró el archivo de entrada` | La ruta de `--entrada` se interpreta desde la carpeta actual. Ejecutá el comando desde la raíz del proyecto o corregí la ruta. |
+| `Formato no soportado` | Usá la extensión `.csv` o `.json`. |
+| `Faltan columnas obligatorias` | Asegurate de que el CSV tenga encabezado y contenga `piloto`, `vuelta` y `tiempo`; revisá también la estructura del JSON. |
+| Se genera una fila en `rechazos.csv` | Corregí el valor indicado en `motivo`: por ejemplo, tiempo vacío o con formato incorrecto, vuelta no entera, piloto inválido, sectores incompletos o clave piloto-vuelta duplicada. Cada registro informa sólo el primer error que encontró. |
+| Se genera una fila en `incidencias.csv` | La fila pasó la validación básica, pero se excluyó del análisis: verificá la diferencia entre tiempo total y sectores o revisá si fue una vuelta lenta. |
+| `Ningún registro superó la validación` | Todas las filas fueron rechazadas. Revisá `outputs/rechazos.csv` para ver el motivo de cada una; no se generan los CSV de comparación ni de incidencias. Corregí los datos y volvé a ejecutar. |
+| `El JSON ... no es válido` o no tiene el formato esperado | Validá la sintaxis y usá una lista de objetos o un objeto con una lista en `vueltas`. |
 
 **Casos límite resueltos explícitamente:** con una sola vuelta válida el desvío queda vacío con la nota "dispersión no definida"; un piloto sin vueltas utilizables aparece en la tabla con la nota "sin vueltas utilizables".
 
