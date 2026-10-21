@@ -213,16 +213,14 @@ Ejecutando con el JSON se obtiene exactamente el mismo reporte.
 
 ![Sectores](docs/grafico_sectores.png)
 
-## 6. Interpretación y limitaciones
+## 6. Limitaciones
 
-- **Interpretación:** en esta sesión simulada VER tiene la mejor vuelta; LEC es el piloto más regular (menor desvío) y RUS, ALO y VER son los de ritmo más variable. Las conclusiones valen sólo para los datos simulados.
-- **Limitaciones:**
-  - Los datos son simulados con un modelo simple; no hay clima, tráfico ni estrategia.
-  - La media y el desvío con pocas vueltas (12 a 15) son estimaciones poco robustas.
-  - La regla de vuelta lenta usa un umbral fijo (1,15 × la mediana), que puede no ser adecuado en otros circuitos o con bandera roja.
-  - Una vuelta con los tres sectores mal cargados pero consistentes entre sí no puede detectarse.
-  - Una sola sesión por archivo y sólo tres sectores.
-  - En los datos simulados los sectores son proporciones fijas del tiempo total, por eso el gráfico de sectores no muestra diferencias de carácter entre pilotos (con datos reales sí las habría).
+- Los datos son simulados con un modelo simple; no hay clima, tráfico ni estrategia.
+- La media y el desvío con pocas vueltas (12 a 15) son estimaciones poco robustas.
+- La regla de vuelta lenta usa un umbral fijo (1,15 × la mediana), que puede no ser adecuado en otros circuitos o con bandera roja.
+- Una vuelta con los tres sectores mal cargados pero consistentes entre sí no puede detectarse.
+- Una sola sesión por archivo y sólo tres sectores.
+- En los datos simulados los sectores son proporciones fijas del tiempo total, por eso el gráfico de sectores no muestra diferencias de carácter entre pilotos (con datos reales sí las habría).
 
 ## 7. Control de versiones
 
