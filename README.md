@@ -224,4 +224,4 @@ Ejecutando con el JSON se obtiene exactamente el mismo reporte.
 
 ## 7. Control de versiones
 
-Historial de desarrollo en este repositorio. Al momento de entregar se creará y publicará la etiqueta `v1.0-entrega`; también se indicará en `ENTREGA.md` el enlace al repositorio y el hash del commit evaluado.
+Historial de desarrollo en este repositorio. La entrega se identifica con la etiqueta `v1.0-entrega`; [`ENTREGA.md`](ENTREGA.md) registra el enlace al repositorio y el hash del commit de código evaluado.

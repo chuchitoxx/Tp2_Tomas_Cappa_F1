@@ -8,7 +8,8 @@
 - [x] **4. Conceptos de programación:** hay funciones separadas por responsabilidad, la clase de dominio `Vuelta`, la abstracción `FuenteDatos` con implementaciones CSV y JSON, expresiones regulares explicadas y validaciones complementarias.
 - [x] **5. Pruebas:** hay casos normales, inválidos y propiedades del resultado; el comando está documentado en el README y el resultado más reciente en `VALIDACION.md`.
 - [x] **6. Git/GitHub:** existe `.gitignore` para entornos, cachés y salidas, y los cambios están organizados en commits concretos publicados en GitHub; confirmar que la cátedra tenga acceso.
-- [ ] **7. Documentación y entrega:** el README cubre instalación, comandos, organización, ejemplos, limpieza, interpretación y limitaciones. Al momento de entregar, anotar el enlace y el hash del commit evaluado y preparar la defensa individual.
+- [x] **7. Documentación y entrega:** el README cubre el uso, el flujo, los resultados y las limitaciones; se registran el repositorio, el commit evaluado y la etiqueta de entrega.
+- [ ] **Defensa individual:** preparar la exposición del trabajo.
 
 ## Evidencia
 
@@ -17,3 +18,6 @@
 - `src/` contiene fuentes CSV/JSON, el modelo de dominio, la validación y el análisis.
 - `tests/` contiene verificaciones ejecutables; `tests/README.md` resume su cobertura.
 - `VALIDACION.md` registra los comandos y resultados de la última ejecución.
+- **Repositorio:** https://github.com/chuchitoxx/Tp2_Tomas_Cappa_F1
+- **Commit de código evaluado:** `41249ca61b490be8f4c4c0875db9311df2400cf1`
+- **Etiqueta de entrega:** `v1.0-entrega`
