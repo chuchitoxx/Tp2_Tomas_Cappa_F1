@@ -1,5 +1,7 @@
 # Pruebas
 
+La suite automatizada verifica funciones y comportamientos de la aplicación. Algunos tests cargan `data/sesion_f1.csv` y `data/sesion_f1.json` como conjunto de datos de prueba para comprobar lectura, conservación de registros y equivalencia entre formatos; otros usan filas preparadas dentro del propio test.
+
 Desde la raíz del repositorio, ejecutar:
 
 ```bash
@@ -16,3 +18,5 @@ python -m unittest discover -s tests -v
 - Gráficos, cuando `matplotlib` está instalado.
 
 La cantidad y el resultado de las pruebas ejecutadas se registran en `VALIDACION.md`. Si falta `matplotlib`, las pruebas de gráficos se omiten. Para instalarlo junto con la dependencia, ejecutar `pip install -r requirements.txt`.
+
+Un resultado `OK` confirma que los casos automatizados cubiertos pasaron en ese entorno. Para revisar cómo responde el programa ante una entrada nueva y diagnosticar filas rechazadas, seguí la guía [Si una entrada está mal cargada](../README.md#si-una-entrada-está-mal-cargada).

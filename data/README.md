@@ -1,4 +1,8 @@
-# Datos
+# Conjunto de datos de prueba
+
+## Qué hay en esta carpeta
+
+Esta carpeta contiene el **conjunto de datos de prueba** del proyecto. Son registros simulados que se usan como entrada para comprobar el flujo completo de la aplicación; cada fila representa una vuelta. Incluye casos válidos, filas con errores deliberados e incidencias esperadas. No son mediciones reales de una sesión.
 
 ## Archivos
 
@@ -47,14 +51,22 @@ NOR,1,85.456,,,
 
 Si una fila tiene un valor inválido, se rechaza con el primer motivo detectado; un encabezado incompleto o un JSON mal formado impide procesar el archivo. La distinción entre rechazos e incidencias y los pasos para diagnosticar errores está en la sección [Si una entrada está mal cargada](../README.md#si-una-entrada-está-mal-cargada).
 
+El formato mal escrito o un error de fila no son lo mismo: un esquema incompleto impide procesar el archivo, mientras que una fila inválida se registra y las demás pueden continuar.
+
 ## Contenido
 
 - 6 pilotos × 15 vueltas = 90 vueltas, más 1 registro duplicado = **91 observaciones**.
 - Dos escrituras distintas del tiempo (aprox. 25 % en formato corto `SS.mmm`).
 
-## Errores inyectados a propósito
+## Filas inválidas e incidencias preparadas a propósito
 
-Son **datos de ejemplo preparados para demostrar la validación**, no pruebas automáticas. Al procesarlos, el programa debe rechazar 7 registros y excluir 4 vueltas:
+Son casos del conjunto de prueba que ejercitan las reglas de validación y selección. Al procesar los 91 registros, se espera que la aplicación acepte 84, rechace 7 y excluya 4 vueltas. Las pruebas automatizadas de [`tests/`](../tests/README.md) cargan estos archivos en algunos casos y también verifican funciones con entradas preparadas dentro de los tests:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Casos que contiene el ejemplo:
 
 | Caso | Dónde | Resultado esperado |
 |---|---|---|

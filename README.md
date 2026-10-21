@@ -39,35 +39,21 @@ La tabla de comparación muestra cuántas vueltas se usaron, la mejor vuelta, la
 
 La primera versión trabaja con una sesión por archivo y hasta tres sectores por vuelta. No descarga datos reales ni analiza neumáticos, clima o estrategias; tampoco incluye una interfaz web o aprendizaje automático.
 
-## 2. Datos de entrada
+### Cómo recorrer el repositorio
 
-Un **dato** es una observación que analiza el programa: en este proyecto, una fila representa una vuelta de un piloto. Los archivos `data/sesion_f1.csv` y `data/sesion_f1.json` son datos de ejemplo simulados; contienen a propósito algunos registros inválidos e incidencias para que se pueda observar la validación. **No son tiempos reales ni pruebas automáticas.**
+| Necesitás... | Consultá... |
+|---|---|
+| Preparar una entrada o consultar el conjunto de prueba | [Formato y datos de prueba](data/README.md) |
+| Entender qué verifica el programa y cómo ejecutarlo | Secciones de instalación, flujo y limpieza de este README |
+| Ejecutar las verificaciones automáticas | [Pruebas](tests/README.md) |
+| Consultar qué se verificó en la última ejecución | [Registro de validación](VALIDACION.md) |
+| Ver los reportes y gráficos que produce el programa | `outputs/` (se actualiza al ejecutar) y `docs/` (imágenes incluidas en este README) |
 
-La aplicación acepta CSV o JSON con el mismo esquema. Los detalles de procedencia y de los casos introducidos en el ejemplo están en [`data/README.md`](data/README.md).
+## 2. Conjunto de prueba y formato de entrada
 
-| Campo | Obligatorio | Formato aceptado |
-|---|---|---|
-| `piloto` | Sí | Código de tres letras, por ejemplo `VER`. Se normaliza a mayúsculas. |
-| `vuelta` | Sí | Número entero entre 1 y 999. |
-| `tiempo` | Sí | `M:SS.mmm` (por ejemplo `1:25.123`) o `SS.mmm` (por ejemplo `85.123`); el valor debe estar entre 30 y 300 segundos. |
-| `s1`, `s2`, `s3` | No | Los tres sectores juntos o ninguno; cada valor debe ser numérico, mayor que 0 y menor que 300 segundos. La suma se compara con `tiempo` durante el análisis. |
+Los archivos `data/sesion_f1.csv` y `data/sesion_f1.json` forman un conjunto de prueba simulado: cada fila representa una vuelta y se incluyen registros válidos, errores deliberados e incidencias para comprobar el flujo de lectura, validación, limpieza y análisis. No son mediciones de una sesión real. Las pruebas automatizadas también usan estos archivos para verificar la lectura y la equivalencia entre CSV y JSON.
 
-Ejemplo mínimo CSV (la primera fila es el encabezado):
-
-```csv
-piloto,vuelta,tiempo,s1,s2,s3
-VER,1,1:25.123,28.000,34.000,23.123
-NOR,1,85.456,,,
-```
-
-En JSON se acepta una lista de objetos o un objeto que contenga la lista bajo la clave `vueltas`:
-
-```json
-[
-  {"piloto": "VER", "vuelta": 1, "tiempo": "1:25.123", "s1": 28, "s2": 34, "s3": 23.123},
-  {"piloto": "NOR", "vuelta": 1, "tiempo": "85.456"}
-]
-```
+Para preparar otras entradas, consultá en [`data/README.md`](data/README.md) el esquema requerido, ejemplos de cada formato y el resultado esperado al procesar el conjunto de prueba.
 
 ## 3. Instalación y reproducción en Linux
 
@@ -124,13 +110,13 @@ Si los formatos son equivalentes, `diff` no muestra diferencias. `--salida` perm
 
 ### Ejecutar las pruebas automáticas
 
-Una **prueba** es una verificación ejecutable del comportamiento del programa; no es un dato de entrada ni una conclusión del análisis. La suite comprueba lectura CSV/JSON, conversiones, validaciones, limpieza, métricas, salidas y gráficos. Se ejecuta desde la raíz, con el entorno virtual activo:
+La suite automatizada comprueba lectura CSV/JSON, conversiones, validaciones, limpieza, métricas, salidas y gráficos. Algunos casos cargan el conjunto de prueba de `data/`. Se ejecuta desde la raíz, con el entorno virtual activo:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-Si todo está correcto, el comando termina con `OK` y código de salida `0`. Las pruebas de gráficos se omiten si `matplotlib` no está instalado. La salida registrada en la última verificación está en [`VALIDACION.md`](VALIDACION.md).
+Si todo está correcto, el comando termina con `OK` y código de salida `0`. La última verificación registró 39 pruebas aprobadas; el detalle y el resultado de integración CSV/JSON están en [`VALIDACION.md`](VALIDACION.md). Las pruebas de gráficos se omiten si `matplotlib` no está instalado.
 
 Para volver a generar los datos simulados (opcional), ejecutá `python scripts/generar_datos.py`; la semilla fija produce el mismo ejemplo.
 
@@ -147,8 +133,8 @@ Para volver a generar los datos simulados (opcional), ejecutá `python scripts/g
 |   |-- modelos.py    # clase Vuelta
 |   |-- pipeline.py   # validación, limpieza, selección, comparación, exportación
 |   `-- graficos.py   # gráficos con matplotlib (opcional)
-|-- tests/            # pruebas con unittest
-|-- data/             # sesión simulada (CSV y JSON) y su documentación
+|-- tests/            # pruebas automatizadas con unittest
+|-- data/             # conjunto de datos de prueba simulado (CSV y JSON)
 |-- scripts/
 |   `-- generar_datos.py
 |-- docs/             # imágenes de ejemplo de los gráficos (las usa este README)
@@ -197,7 +183,15 @@ Las siguientes exclusiones **no** son errores de datos, sino criterios de compar
 
 ### Si una entrada está mal cargada
 
-El programa informa errores del archivo o del esquema en la terminal y finaliza con código `1`. Un error en una fila, en cambio, se registra en `outputs/rechazos.csv` con su número de registro y el primer motivo detectado; las demás filas válidas siguen procesándose. Las vueltas válidas que no se usan para comparar quedan separadas en `outputs/incidencias.csv`.
+Primero distinguí un problema del **archivo completo** de un error en una **fila**. Si falta el archivo, el formato no es compatible, el encabezado no contiene las columnas obligatorias o el JSON está mal formado, el programa muestra un error en la terminal y termina con código `1`. Si una fila no pasa la validación, se anota en `rechazos.csv` con su número y el primer motivo; las demás filas válidas siguen procesándose. Las vueltas válidas que se excluyen por criterios de análisis quedan en `incidencias.csv`, no en rechazos.
+
+Para diagnosticar sin sobrescribir los reportes habituales, ejecutá desde la raíz del repositorio:
+
+```bash
+python src/main.py --entrada ruta/a/mi_sesion.csv --salida /tmp/diagnostico --sin-graficos
+```
+
+Revisá el mensaje de la terminal y, si el proceso pudo leer el esquema, abrí `/tmp/diagnostico/rechazos.csv` e `/tmp/diagnostico/incidencias.csv`. Corregí el archivo de entrada según el motivo y volvé a ejecutar el mismo comando. Por ejemplo, `tiempo vacío` se corrige cargando un tiempo como `1:25.123`; `sectores incompletos` requiere completar `s1`, `s2` y `s3` o dejar los tres vacíos. No hace falta corregir el archivo de ejemplo para correr las pruebas automáticas.
 
 | Qué observás | Qué revisar |
 |---|---|
