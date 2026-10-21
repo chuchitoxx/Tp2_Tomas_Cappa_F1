@@ -56,10 +56,12 @@ La primera versión trabaja con una sesión por archivo y hasta tres sectores po
 |---|---|
 | Preparar una entrada o consultar el conjunto de prueba | [Formato y datos de prueba](data/README.md) |
 | Reproducir el proyecto en Linux o Windows | [Guía de reproducibilidad](REPRODUCIBILIDAD.md) |
-| Entender el flujo y las decisiones de limpieza | Secciones de organización y limpieza de este README |
+| Entender el flujo del programa | [Organización del código](#3-organización-del-código) |
+| Consultar validaciones y diagnosticar entradas | [Decisiones de limpieza](#4-decisiones-de-limpieza) |
 | Ejecutar las verificaciones automáticas | [Pruebas](tests/README.md) |
 | Consultar qué se verificó en la última ejecución | [Registro de validación](VALIDACION.md) |
-| Ver los reportes y gráficos que produce el programa | `outputs/` (se actualiza al ejecutar) y `docs/` (imágenes incluidas en este README) |
+| Consultar los archivos que genera | [Archivos de salida](#archivos-de-salida-carpeta-outputs) |
+| Ver los gráficos incluidos | [Gráficos del ejemplo](#gráficos) |
 
 ## 2. Conjunto de prueba y formato de entrada
 
