@@ -13,7 +13,7 @@ python src/main.py --entrada data/sesion_f1.csv --sin-graficos
 python -m unittest discover -s tests -v
 ```
 
-El análisis debe informar 91 registros leídos, 84 válidos, 7 rechazados, 4 vueltas excluidas y 80 utilizadas. Las pruebas deben finalizar con `OK`.
+El análisis debe informar 91 registros leídos, 84 válidos, 7 rechazados, 4 vueltas excluidas y 80 utilizadas. Genera comparaciones por piloto y sector, además de archivos para revisar rechazos e incidencias en `outputs/`; los gráficos también se guardan allí si se instala `matplotlib`. La tabla de [archivos de salida](#archivos-de-salida-carpeta-outputs) explica cada reporte. Las pruebas deben finalizar con `OK`.
 
 ## Problema y solución
 
