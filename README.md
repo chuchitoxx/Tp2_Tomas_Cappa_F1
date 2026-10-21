@@ -44,7 +44,8 @@ La primera versión trabaja con una sesión por archivo y hasta tres sectores po
 | Necesitás... | Consultá... |
 |---|---|
 | Preparar una entrada o consultar el conjunto de prueba | [Formato y datos de prueba](data/README.md) |
-| Entender qué verifica el programa y cómo ejecutarlo | Secciones de instalación, flujo y limpieza de este README |
+| Reproducir el proyecto en Linux o Windows | [Guía de reproducibilidad](REPRODUCIBILIDAD.md) |
+| Entender el flujo y las decisiones de limpieza | Secciones de organización y limpieza de este README |
 | Ejecutar las verificaciones automáticas | [Pruebas](tests/README.md) |
 | Consultar qué se verificó en la última ejecución | [Registro de validación](VALIDACION.md) |
 | Ver los reportes y gráficos que produce el programa | `outputs/` (se actualiza al ejecutar) y `docs/` (imágenes incluidas en este README) |
@@ -55,72 +56,7 @@ Los archivos `data/sesion_f1.csv` y `data/sesion_f1.json` forman un conjunto de 
 
 Para preparar otras entradas, consultá en [`data/README.md`](data/README.md) el esquema requerido, ejemplos de cada formato y el resultado esperado al procesar el conjunto de prueba.
 
-## 3. Instalación y reproducción en Linux
-
-Requiere **Python 3.9 o superior**. El análisis y las pruebas usan la biblioteca estándar; `matplotlib` sólo hace falta para generar gráficos y ejecutar sus pruebas. Los comandos siguientes se ejecutan desde la raíz del repositorio, en una terminal Linux:
-
-```bash
-git clone https://github.com/chuchitoxx/Tp2_Tomas_Cappa_F1.git
-cd Tp2_Tomas_Cappa_F1
-
-python3 --version
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-```
-
-Si Linux informa que no está disponible `venv`, instalá el paquete de entornos virtuales de Python que corresponda a tu distribución (por ejemplo, `python3-venv` en Debian o Ubuntu) y repetí la creación del entorno. La instalación de `requirements.txt` agrega `matplotlib`; se puede omitir si sólo se quieren procesar datos y correr pruebas sin gráficos.
-
-### Ejecutar y comprobar el ejemplo
-
-Este comando funciona también si no se instaló `matplotlib`:
-
-```bash
-python src/main.py --entrada data/sesion_f1.csv --sin-graficos
-```
-
-Para generar los gráficos, quitá `--sin-graficos`:
-
-```bash
-python src/main.py --entrada data/sesion_f1.csv
-python src/main.py --entrada data/sesion_f1.json
-python src/main.py --entrada data/sesion_f1.csv --pilotos VER NOR LEC --tolerancia 0.1
-```
-
-Con el CSV de ejemplo, el primer comando debe terminar con código de salida `0` e informar **91 registros leídos, 84 válidos, 7 rechazados, 4 vueltas excluidas y 80 utilizadas**. La tabla debe mostrar a VER como la vuelta más rápida (`1:24.675`) y a LEC con el menor desvío (`0.219 s`). Los archivos se crean en `outputs/`; se pueden abrir con una hoja de cálculo o inspeccionar desde la terminal.
-
-Para verificar que CSV y JSON producen el mismo reporte:
-
-```bash
-python src/main.py --entrada data/sesion_f1.csv --salida /tmp/reporte-csv --sin-graficos
-python src/main.py --entrada data/sesion_f1.json --salida /tmp/reporte-json --sin-graficos
-diff -u /tmp/reporte-csv/comparacion_pilotos.csv /tmp/reporte-json/comparacion_pilotos.csv
-```
-
-Si los formatos son equivalentes, `diff` no muestra diferencias. `--salida` permite elegir una carpeta distinta de `outputs/`.
-
-| Argumento | Descripción | Por defecto |
-|---|---|---|
-| `--entrada` | Archivo `.csv` o `.json` (obligatorio) | — |
-| `--pilotos` | Códigos a comparar | todos |
-| `--tolerancia` | Diferencia máxima (s) entre tiempo total y suma de sectores | `0.05` |
-| `--umbral-lenta` | Una vuelta es lenta si supera este múltiplo de la mediana del piloto | `1.15` |
-| `--salida` | Carpeta de salida | `outputs` |
-| `--sin-graficos` | No genera los gráficos (no requiere matplotlib) | — |
-
-### Ejecutar las pruebas automáticas
-
-La suite automatizada comprueba lectura CSV/JSON, conversiones, validaciones, limpieza, métricas, salidas y gráficos. Algunos casos cargan el conjunto de prueba de `data/`. Se ejecuta desde la raíz, con el entorno virtual activo:
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-Si todo está correcto, el comando termina con `OK` y código de salida `0`. La última verificación registró 39 pruebas aprobadas; el detalle y el resultado de integración CSV/JSON están en [`VALIDACION.md`](VALIDACION.md). Las pruebas de gráficos se omiten si `matplotlib` no está instalado.
-
-Para volver a generar los datos simulados (opcional), ejecutá `python scripts/generar_datos.py`; la semilla fija produce el mismo ejemplo.
-
-## 4. Organización del código
+## 3. Organización del código
 
 ```
 .
@@ -160,7 +96,7 @@ fuente.cargar(ruta)  ->  normalizar_campos  ->  validar_esquema
   - La regex **no** garantiza que el valor sea razonable, por eso se complementa con una comprobación de rango (30 a 300 s) y, en los sectores, con conversión numérica y rango.
 - **Validaciones y errores comprensibles:** columnas faltantes, archivo inexistente, JSON mal formado, piloto desconocido (informa los disponibles) y parámetros inválidos terminan con un mensaje claro y código de salida 1.
 
-## 5. Decisiones de limpieza
+## 4. Decisiones de limpieza
 
 Cada registro se rechaza **una sola vez** (por el primer motivo que corresponda) y queda en `outputs/rechazos.csv` con su número de registro y el motivo. Nada se descarta en silencio.
 
@@ -205,7 +141,7 @@ Revisá el mensaje de la terminal y, si el proceso pudo leer el esquema, abrí `
 
 **Casos límite resueltos explícitamente:** con una sola vuelta válida el desvío queda vacío con la nota "dispersión no definida"; un piloto sin vueltas utilizables aparece en la tabla con la nota "sin vueltas utilizables".
 
-## 6. Ejemplo de resultado
+## 5. Ejemplo de resultado
 
 Con `python src/main.py --entrada data/sesion_f1.csv`:
 
@@ -264,7 +200,7 @@ Ejecutando con el JSON se obtiene exactamente el mismo reporte.
 
 ![Sectores](docs/grafico_sectores.png)
 
-## 7. Interpretación y limitaciones
+## 6. Interpretación y limitaciones
 
 - **Interpretación:** en esta sesión simulada VER tiene la mejor vuelta; LEC es el piloto más regular (menor desvío) y RUS, ALO y VER son los de ritmo más variable. Las conclusiones valen sólo para los datos simulados.
 - **Limitaciones:**
@@ -275,6 +211,6 @@ Ejecutando con el JSON se obtiene exactamente el mismo reporte.
   - Una sola sesión por archivo y sólo tres sectores.
   - En los datos simulados los sectores son proporciones fijas del tiempo total, por eso el gráfico de sectores no muestra diferencias de carácter entre pilotos (con datos reales sí las habría).
 
-## 8. Control de versiones
+## 7. Control de versiones
 
 Historial de desarrollo en este repositorio. Al momento de entregar se creará y publicará la etiqueta `v1.0-entrega`; también se indicará en `ENTREGA.md` el enlace al repositorio y el hash del commit evaluado.
