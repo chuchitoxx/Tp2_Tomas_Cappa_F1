@@ -4,6 +4,17 @@
 **Materia:** Programación Orientada a Datos – Licenciatura en Ciencia de Datos – UCA Rosario, 2026
 **Trabajo:** TP2 individual
 
+## Inicio rápido
+
+Con el entorno preparado y activado ([guía para Linux y Windows](REPRODUCIBILIDAD.md)), ejecutá desde la raíz del repositorio:
+
+```bash
+python src/main.py --entrada data/sesion_f1.csv --sin-graficos
+python -m unittest discover -s tests -v
+```
+
+El análisis debe informar 91 registros leídos, 84 válidos, 7 rechazados, 4 vueltas excluidas y 80 utilizadas. Las pruebas deben finalizar con `OK`.
+
 ## Problema y solución
 
 Después de una sesión de entrenamientos, un equipo necesita distinguir si un piloto fue rápido en una vuelta aislada, si mantuvo un ritmo regular y en qué partes del circuito se puede estar perdiendo tiempo. La tarea se complica cuando el registro incluye formatos distintos, datos faltantes o repetidos, vueltas de entrada o salida de boxes y sectores que no coinciden con el tiempo total.
