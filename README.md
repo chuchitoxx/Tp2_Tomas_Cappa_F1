@@ -79,6 +79,7 @@ Para preparar otras entradas, consultá en [`data/README.md`](data/README.md) el
 |-- ENTREGA.md           # checklist, commit evaluado y etiqueta
 |-- requirements.txt
 |-- .gitignore
+|-- .github/workflows/tests.yml  # pruebas en Linux con Python 3.9 y 3.12
 |-- src/
 |   |-- main.py       # argumentos y coordinación del flujo
 |   |-- fuentes.py    # FuenteDatos (abstracta), FuenteCSV, FuenteJSON
