@@ -116,7 +116,7 @@ Cada registro se rechaza **una sola vez** (por el primer motivo que corresponda)
 | Regla | Qué hace | Justificación |
 |---|---|---|
 | Código de piloto inválido | Rechaza | No se puede asignar la vuelta a un piloto |
-| Número de vuelta no entero o < 1 | Rechaza | Identificador inválido |
+| Número de vuelta no entero, < 1 o > 999 (se acepta 2.0 como 2) | Rechaza | Identificador inválido |
 | Tiempo vacío | Rechaza ("vuelta incompleta") | No hay dato para comparar; **no** se convierte en cero |
 | Tiempo con formato inválido | Rechaza | No se puede interpretar |
 | Tiempo fuera de 30–300 s | Rechaza | Valor físicamente irreal |
@@ -127,7 +127,7 @@ Las siguientes exclusiones **no** son errores de datos, sino criterios de compar
 
 | Regla | Qué hace |
 |---|---|
-| Sectores inconsistentes | Excluye si `|tiempo − (s1+s2+s3)| >` tolerancia |
+| Sectores inconsistentes | Excluye si `abs(tiempo − (s1+s2+s3)) > tolerancia` |
 | Vuelta lenta | Excluye si el tiempo supera `1.15 ×` la mediana del piloto (probable vuelta de boxes); sólo se evalúa con 3 o más vueltas |
 
 ### Si una entrada está mal cargada

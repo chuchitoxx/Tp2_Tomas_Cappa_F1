@@ -28,7 +28,7 @@ Cada fila es **una vuelta cronometrada de un piloto** en una sesión.
 | Columna | Tipo | Descripción | Obligatoria |
 |---|---|---|---|
 | `piloto` | texto | Código de 3 letras mayúsculas (ej. `VER`). | Sí |
-| `vuelta` | entero ≥ 1 | Número de vuelta dentro de la sesión. | Sí |
+| `vuelta` | entero entre 1 y 999 | Número de vuelta dentro de la sesión. | Sí |
 | `tiempo` | texto | Tiempo total de la vuelta, `M:SS.mmm` (`1:25.123`) o `SS.mmm` (`85.123`). | Sí |
 | `s1`, `s2`, `s3` | decimal (s) | Tiempo de cada sector en segundos. Se aceptan los tres o ninguno. | No |
 
