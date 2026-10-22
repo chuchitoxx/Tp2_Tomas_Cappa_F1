@@ -15,7 +15,7 @@ python -m unittest discover -s tests -v
 
 El análisis debe informar 91 registros leídos, 84 válidos, 7 rechazados, 4 vueltas excluidas y 80 utilizadas. Genera comparaciones por piloto y sector, además de archivos para revisar rechazos e incidencias en `outputs/`; los gráficos también se guardan allí si se instala `matplotlib`. La tabla de [archivos de salida](#archivos-de-salida-carpeta-outputs) explica cada reporte. Las pruebas deben finalizar con `OK`.
 
-## Problema y solución
+## 1. Problema y solución
 
 Después de una sesión de entrenamientos, un equipo necesita distinguir si un piloto fue rápido en una vuelta aislada, si mantuvo un ritmo regular y en qué partes del circuito se puede estar perdiendo tiempo. La tarea se complica cuando el registro incluye formatos distintos, datos faltantes o repetidos, vueltas de entrada o salida de boxes y sectores que no coinciden con el tiempo total.
 
@@ -74,6 +74,9 @@ Para preparar otras entradas, consultá en [`data/README.md`](data/README.md) el
 ```
 .
 |-- README.md
+|-- REPRODUCIBILIDAD.md  # preparar el entorno en Linux y Windows
+|-- VALIDACION.md        # registro de la última verificación
+|-- ENTREGA.md           # checklist, commit evaluado y etiqueta
 |-- requirements.txt
 |-- .gitignore
 |-- src/
