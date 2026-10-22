@@ -87,6 +87,7 @@ Para preparar otras entradas, consultá en [`data/README.md`](data/README.md) el
 |   `-- graficos.py   # gráficos con matplotlib (opcional)
 |-- tests/            # pruebas automatizadas con unittest
 |-- data/             # conjunto de datos de prueba simulado (CSV y JSON)
+|   `-- ejemplos_invalidos/  # entradas mal cargadas con su mensaje esperado
 |-- scripts/
 |   `-- generar_datos.py
 |-- docs/             # imágenes de ejemplo de los gráficos (las usa este README)
@@ -143,7 +144,7 @@ Para diagnosticar sin sobrescribir los reportes habituales, ejecutá desde la ra
 python src/main.py --entrada ruta/a/mi_sesion.csv --salida /tmp/diagnostico --sin-graficos
 ```
 
-Revisá el mensaje de la terminal y, si el proceso pudo leer el esquema, abrí `/tmp/diagnostico/rechazos.csv` e `/tmp/diagnostico/incidencias.csv`. Corregí el archivo de entrada según el motivo y volvé a ejecutar el mismo comando. Por ejemplo, `tiempo vacío` se corrige cargando un tiempo como `1:25.123`; `sectores incompletos` requiere completar `s1`, `s2` y `s3` o dejar los tres vacíos. No hace falta corregir el archivo de ejemplo para correr las pruebas automáticas.
+Revisá el mensaje de la terminal y, si el proceso pudo leer el esquema, abrí `/tmp/diagnostico/rechazos.csv` e `/tmp/diagnostico/incidencias.csv`. Corregí el archivo de entrada según el motivo y volvé a ejecutar el mismo comando. Para practicar, [`data/ejemplos_invalidos/`](data/ejemplos_invalidos/README.md) trae archivos con los errores más comunes y el mensaje que produce cada uno. Por ejemplo, `tiempo vacío` se corrige cargando un tiempo como `1:25.123`; `sectores incompletos` requiere completar `s1`, `s2` y `s3` o dejar los tres vacíos. No hace falta corregir el archivo de ejemplo para correr las pruebas automáticas.
 
 | Qué observás | Qué revisar |
 |---|---|

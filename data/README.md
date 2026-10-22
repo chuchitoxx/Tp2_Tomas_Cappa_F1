@@ -10,6 +10,7 @@ Esta carpeta contiene el **conjunto de datos de prueba** del proyecto. Son regis
 |---|---|
 | `sesion_f1.csv` | Sesión simulada de 91 registros (formato CSV). |
 | `sesion_f1.json` | Los mismos 91 registros en formato JSON (lista de objetos). Sirve para comprobar que ambas lecturas son equivalentes. |
+| `ejemplos_invalidos/` | Entradas mal cargadas a propósito (sin columna `tiempo`, JSON roto, extensión `.xlsx`, todas las filas inválidas) con el mensaje esperado de cada una. Ver su [README](ejemplos_invalidos/README.md). |
 
 ## Procedencia
 
