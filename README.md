@@ -218,7 +218,7 @@ Ejecutando con el JSON se obtiene exactamente el mismo reporte.
 
 ## 6. Limitaciones
 
-- Los datos son simulados con un modelo simple; no hay clima, tráfico ni estrategia.
+- El conjunto de prueba es simulado con un modelo simple; no hay clima, tráfico ni estrategia.
 - La media y el desvío con pocas vueltas (12 a 15) son estimaciones poco robustas.
 - La regla de vuelta lenta usa un umbral fijo (1,15 × la mediana), que puede no ser adecuado en otros circuitos o con bandera roja.
 - Una vuelta con los tres sectores mal cargados pero consistentes entre sí no puede detectarse.
