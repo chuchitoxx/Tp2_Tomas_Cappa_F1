@@ -4,6 +4,9 @@ Ejecutar desde la raíz del repositorio:
     python -m unittest discover -s tests -v
 """
 
+import contextlib
+import csv
+import io
 import os
 import sys
 import tempfile
@@ -31,6 +34,7 @@ from pipeline import (
 
 CSV_PRUEBA = os.path.join(RAIZ, "data", "sesion_f1.csv")
 JSON_PRUEBA = os.path.join(RAIZ, "data", "sesion_f1.json")
+INVALIDOS = os.path.join(RAIZ, "data", "ejemplos_invalidos")
 
 
 def fila(piloto, vuelta, tiempo, s1="", s2="", s3=""):
@@ -349,6 +353,58 @@ class TestAplicacion(unittest.TestCase):
             self.assertFalse(
                 os.path.exists(os.path.join(salida, "comparacion_pilotos.csv"))
             )
+
+
+class TestEntradasMalCargadas(unittest.TestCase):
+    """Los ejemplos de data/ejemplos_invalidos terminan con código 1 y su mensaje."""
+
+    def _ejecutar(self, archivo, salida):
+        error = io.StringIO()
+        with contextlib.redirect_stderr(error):
+            codigo = app.main(
+                [
+                    "--entrada",
+                    os.path.join(INVALIDOS, archivo),
+                    "--salida",
+                    salida,
+                    "--sin-graficos",
+                ]
+            )
+        return codigo, error.getvalue()
+
+    def test_errores_de_archivo(self):
+        casos = {
+            "sin_columna_tiempo.csv": "Faltan columnas obligatorias: tiempo.",
+            "json_roto.json": "no es válido",
+            "sesion.xlsx": "Formato no soportado '.xlsx'. Use .csv o .json.",
+        }
+        for archivo, mensaje in casos.items():
+            with self.subTest(archivo=archivo):
+                with tempfile.TemporaryDirectory() as tmp:
+                    codigo, error = self._ejecutar(archivo, tmp)
+                    self.assertEqual(codigo, 1)
+                    self.assertIn(mensaje, error)
+                    self.assertEqual(os.listdir(tmp), [])
+
+    def test_todas_las_filas_invalidas(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            codigo, error = self._ejecutar("todas_invalidas.csv", tmp)
+            self.assertEqual(codigo, 1)
+            self.assertIn("Ningún registro superó la validación", error)
+            with open(os.path.join(tmp, "rechazos.csv"), encoding="utf-8") as f:
+                motivos = [r["motivo"] for r in csv.DictReader(f)]
+            esperados = (
+                "código de piloto inválido",
+                "número de vuelta inválido: '0'",
+                "número de vuelta inválido: '2.5'",
+                "vuelta incompleta",
+                "formato de tiempo no reconocido",
+                "tiempo fuera de rango",
+                "sectores incompletos",
+            )
+            self.assertEqual(len(motivos), len(esperados))
+            for motivo, esperado in zip(motivos, esperados):
+                self.assertIn(esperado, motivo)
 
 
 if __name__ == "__main__":

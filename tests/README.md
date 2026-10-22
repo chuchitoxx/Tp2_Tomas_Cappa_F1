@@ -14,6 +14,7 @@ python -m unittest discover -s tests -v
 - Conversión de tiempos, validación de filas y registro de rechazos.
 - Selección de vueltas, comparación de pilotos y cálculo de sectores.
 - Casos límite, como una sola vuelta válida o un piloto sin vueltas utilizables.
+- Entradas mal cargadas de `data/ejemplos_invalidos/`: terminan con código de salida 1 y el mensaje documentado.
 - Propiedades del resultado: se conservan los registros y los estadísticos son coherentes.
 - Gráficos, cuando `matplotlib` está instalado.
 

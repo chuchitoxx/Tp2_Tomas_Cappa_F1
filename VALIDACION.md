@@ -1,6 +1,6 @@
 # Verificación
 
-**Fecha:** 21/10/2026
+**Fecha:** 22/10/2026
 **Entorno:** Linux, Python 3.14.2
 
 Este documento registra la suite automatizada y una prueba de integración del flujo completo con el conjunto de datos de prueba. Las filas inválidas del CSV/JSON son casos intencionales y sus rechazos forman parte del resultado esperado.
@@ -14,6 +14,6 @@ python3 src/main.py --entrada data/sesion_f1.json --salida /tmp/tp2-entrega-fina
 diff -u /tmp/tp2-entrega-final-csv/comparacion_pilotos.csv /tmp/tp2-entrega-final-json/comparacion_pilotos.csv
 ```
 
-**Suite automatizada:** las 39 pruebas terminaron correctamente, incluidas las tres de gráficos.
+**Suite automatizada:** las 41 pruebas terminaron correctamente, incluidas las tres de gráficos y las de entradas mal cargadas.
 
 **Prueba de integración CSV/JSON:** ambos formatos produjeron reportes de comparación equivalentes. La aplicación leyó 91 registros, aceptó 84, rechazó 7 y excluyó 4 vueltas, con 80 vueltas utilizadas. Los reportes se guardan en `outputs/`.
