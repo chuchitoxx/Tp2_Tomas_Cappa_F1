@@ -19,5 +19,5 @@
 - `tests/` contiene verificaciones ejecutables; `tests/README.md` resume su cobertura.
 - `VALIDACION.md` registra los comandos y resultados de la última ejecución.
 - **Repositorio:** https://github.com/chuchitoxx/Tp2_Tomas_Cappa_F1
-- **Commit de código evaluado:** `41249ca61b490be8f4c4c0875db9311df2400cf1`
+- **Commit de código evaluado:** `3c594b2c7e9f83f6a0d3fd08f04b1a583adefe7a`
 - **Etiqueta de entrega:** `v1.0-entrega`
