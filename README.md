@@ -1,5 +1,17 @@
 # Comparador de vueltas de Fórmula 1
 
+<div align="center">
+
+**Validá, limpiá y compará los tiempos de una sesión de F1 a partir de un CSV o un JSON.**
+
+[![Pruebas](https://github.com/chuchitoxx/Tp2_Tomas_Cappa_F1/actions/workflows/tests.yml/badge.svg)](https://github.com/chuchitoxx/Tp2_Tomas_Cappa_F1/actions/workflows/tests.yml)
+![Python](https://img.shields.io/badge/python-3.9%20%7C%203.12-3776AB?logo=python&logoColor=white)
+![Biblioteca estándar](https://img.shields.io/badge/dependencias-sólo%20biblioteca%20estándar-2ea44f)
+![matplotlib](https://img.shields.io/badge/gráficos-matplotlib%20(opcional)-11557C)
+![Entrega](https://img.shields.io/badge/entrega-v1.0-E10600)
+
+</div>
+
 **Autor:** Tomás Cappa
 **Materia:** Programación Orientada a Datos – Licenciatura en Ciencia de Datos – UCA Rosario, 2026
 **Trabajo:** TP2 individual
@@ -14,6 +26,9 @@ python -m unittest discover -s tests -v
 ```
 
 El análisis debe informar 91 registros leídos, 84 válidos, 7 rechazados, 4 vueltas excluidas y 80 utilizadas. Genera comparaciones por piloto y sector, además de archivos para revisar rechazos e incidencias en `outputs/`; los gráficos también se guardan allí si se instala `matplotlib`. La tabla de [archivos de salida](#archivos-de-salida-carpeta-outputs) explica cada reporte. Las pruebas deben finalizar con `OK`.
+
+> [!TIP]
+> Si quitás `--sin-graficos` y tenés `matplotlib` instalado, también se generan los cuatro gráficos en `outputs/`.
 
 ## 1. Problema y solución
 
@@ -31,7 +46,8 @@ Con el archivo de ejemplo, la aplicación lee 91 registros, acepta 84 y rechaza 
 4. **¿El gráfico de sectores permite afirmar en qué sector es mejor cada piloto?** No con estos datos. Los sectores simulados se construyen como proporciones fijas del tiempo total (33 %, 40 % y 27 %). Por eso, sus diferencias repiten proporcionalmente las diferencias generales de ritmo y no representan fortalezas reales en una parte del circuito. Con datos reales, comparar las diferencias por sector sí ayudaría a localizar dónde se gana o pierde tiempo.
 5. **¿Por qué hay que revisar la evolución vuelta a vuelta además de las medias?** El gráfico permite ver cambios de ritmo y reconocer vueltas excluidas —por ejemplo, posibles vueltas de boxes— que podrían distorsionar una comparación. En este ejemplo se excluyeron cuatro vueltas con incidencias; los registros rechazados y sus motivos también quedan disponibles para revisar la limpieza.
 
-**Conclusión del ejemplo:** VER combina la vuelta más rápida con la mejor media, mientras que LEC es quien muestra mayor regularidad. La lectura depende de qué se quiera evaluar: pico de velocidad, ritmo promedio o consistencia. Los gráficos orientan la interpretación, pero sus conclusiones deben limitarse a esta sesión simulada.
+> [!IMPORTANT]
+> **Conclusión del ejemplo:** VER combina la vuelta más rápida con la mejor media, mientras que LEC es quien muestra mayor regularidad. La lectura depende de qué se quiera evaluar: pico de velocidad, ritmo promedio o consistencia. Los gráficos orientan la interpretación, pero sus conclusiones deben limitarse a esta sesión simulada.
 
 La tabla de comparación muestra cuántas vueltas se usaron, la mejor vuelta, la media, el desvío estándar y la diferencia respecto del mejor tiempo. Un desvío menor indica tiempos más parejos dentro de esta sesión.
 
@@ -65,7 +81,10 @@ La primera versión trabaja con una sesión por archivo y hasta tres sectores po
 
 ## 2. Conjunto de prueba y formato de entrada
 
-Los archivos `data/sesion_f1.csv` y `data/sesion_f1.json` forman un conjunto de prueba simulado: cada fila representa una vuelta y se incluyen registros válidos, errores deliberados e incidencias para comprobar el flujo de lectura, validación, limpieza y análisis. No son mediciones de una sesión real. Las pruebas automatizadas también usan estos archivos para verificar la lectura y la equivalencia entre CSV y JSON.
+> [!WARNING]
+> **Los datos son simulados.** No son mediciones de una sesión real: sirven para probar el flujo, no para sacar conclusiones sobre pilotos reales.
+
+Los archivos `data/sesion_f1.csv` y `data/sesion_f1.json` forman un conjunto de prueba simulado: cada fila representa una vuelta y se incluyen registros válidos, errores deliberados e incidencias para comprobar el flujo de lectura, validación, limpieza y análisis. Las pruebas automatizadas también usan estos archivos para verificar la lectura y la equivalencia entre CSV y JSON.
 
 Para preparar otras entradas, consultá en [`data/README.md`](data/README.md) el esquema requerido, ejemplos de cada formato y el resultado esperado al procesar el conjunto de prueba.
 
@@ -97,10 +116,25 @@ Para preparar otras entradas, consultá en [`data/README.md`](data/README.md) el
 
 **Flujo:** leer → inspeccionar y validar → limpiar y transformar → analizar → comunicar.
 
-```
-fuente.cargar(ruta)  ->  normalizar_campos  ->  validar_esquema
-   ->  limpiar_datos (vueltas, rechazos)  ->  seleccionar_vueltas (selección, incidencias)
-   ->  comparar_pilotos / comparar_sectores  ->  verificar_resultado  ->  guardar_* y gráficos
+```mermaid
+flowchart LR
+    A[/"CSV o JSON"/] --> B["fuente.cargar(ruta)"]
+    B --> C[normalizar_campos]
+    C --> D[validar_esquema]
+    D --> E[limpiar_datos]
+    E -- rechazos --> R[("rechazos.csv")]
+    E --> F[seleccionar_vueltas]
+    F -- incidencias --> I[("incidencias.csv")]
+    F --> G["comparar_pilotos<br>comparar_sectores"]
+    G --> H[verificar_resultado]
+    H --> S[("comparaciones CSV<br>y gráficos PNG")]
+
+    classDef entrada fill:#1f6feb,stroke:#1f6feb,color:#fff
+    classDef descarte fill:#da3633,stroke:#da3633,color:#fff
+    classDef salida fill:#2ea44f,stroke:#2ea44f,color:#fff
+    class A entrada
+    class R,I descarte
+    class S salida
 ```
 
 ### Conceptos aplicados y justificación
@@ -116,7 +150,8 @@ fuente.cargar(ruta)  ->  normalizar_campos  ->  validar_esquema
 
 ## 4. Decisiones de limpieza
 
-Cada registro se rechaza **una sola vez** (por el primer motivo que corresponda) y queda en `outputs/rechazos.csv` con su número de registro y el motivo. Nada se descarta en silencio.
+> [!NOTE]
+> **Nada se descarta en silencio.** Cada registro se rechaza una sola vez (por el primer motivo que corresponda) y queda en `outputs/rechazos.csv` con su número de registro y el motivo.
 
 | Regla | Qué hace | Justificación |
 |---|---|---|
@@ -157,7 +192,8 @@ Revisá el mensaje de la terminal y, si el proceso pudo leer el esquema, abrí `
 | `Ningún registro superó la validación` | Todas las filas fueron rechazadas. Revisá `outputs/rechazos.csv` para ver el motivo de cada una; no se generan los CSV de comparación ni de incidencias. Corregí los datos y volvé a ejecutar. |
 | `El JSON ... no es válido` o no tiene el formato esperado | Validá la sintaxis y usá una lista de objetos o un objeto con una lista en `vueltas`. |
 
-**Casos límite resueltos explícitamente:** con una sola vuelta válida el desvío queda vacío con la nota "dispersión no definida"; un piloto sin vueltas utilizables aparece en la tabla con la nota "sin vueltas utilizables".
+> [!TIP]
+> **Casos límite resueltos explícitamente:** con una sola vuelta válida el desvío queda vacío con la nota "dispersión no definida"; un piloto sin vueltas utilizables aparece en la tabla con la nota "sin vueltas utilizables".
 
 ## 5. Ejemplo de resultado
 
@@ -219,6 +255,9 @@ Ejecutando con el JSON se obtiene exactamente el mismo reporte.
 ![Sectores](docs/grafico_sectores.png)
 
 ## 6. Limitaciones
+
+> [!CAUTION]
+> Los resultados valen para esta sesión simulada. Antes de usarlos con datos reales, tené en cuenta lo siguiente:
 
 - El conjunto de prueba es simulado con un modelo simple; no hay clima, tráfico ni estrategia.
 - La media y el desvío con pocas vueltas (12 a 15) son estimaciones poco robustas.
